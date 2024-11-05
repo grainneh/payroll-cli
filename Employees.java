@@ -61,6 +61,4 @@ public class Employees{
     public void setSalaryScale(int salaryScale){
         this.salaryScale = salaryScale;
     }
-
-    public void set
 }
