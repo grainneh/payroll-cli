@@ -1,0 +1,40 @@
+/*
+Attributes:
+    String employeeId
+    double claimedAmount
+    String submissionDate
+Methods:
+    void validateClaim()
+    void approveClaim()
+-> from ChatGPT
+
+INITIAL THOUGHTS:
+Part time employees need to submit a pay claim form by the second friday of the month in order to get paid that month.
+    If employee has submitted payclaim -> they get paid in the same way as every other employee
+    If the employee has not submitted payclaim -> they don't get paid
+
+PSEUDOCODE:
+
+
+@author Gráinne Hartigan
+@date 5.11.2024
+ */
+import java.time.*;
+
+public class PayClaim {
+    //needs to have methods getHoursWorked and getHourlyRate
+    //employee should be able to enter their hours worked in the CLI, their hourly rate would come from csv file
+    //have check to ensure its submitted by second friday of month
+
+    public PayClaim() {
+
+    }
+
+    public boolean validatePayClaim(LocalDate submissionDate){
+        //get current month
+        //check what date second friday of the month is
+        
+        //if payClaim was submitted before friday -> claim is valid, return true
+        //if payClaim was submitted after friday -> claim is not valid, return false
+    }
+}
