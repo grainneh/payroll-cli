@@ -3,6 +3,11 @@ New class deduction to calculate pay deductions, allowing Payslip to simply gene
 The class deductions determines the salary by checking if the employee is full/part time (using method from Employee)
 Calculates tax deductions, and uses set rates for union and health insurance fees
 Calculates net pay
+
+There is a problem with the salary and hours worked. Not sure how to get salary using getPosition(), getSalaryScale() 
+and getCurrentPoint(). For part time employees, I think the getHoursWorked() should come from when they submit their
+pay claim in the CLI, and their hourlyRate needs to be defined somewhere. Possibly in the employee class.
+
 @author Gráinne Hartigan
 @version 9.11.24
  */
