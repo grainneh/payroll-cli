@@ -1,0 +1,75 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class CLI {
+    /**
+     * A menu for the CLI.
+     */
+    private Scanner in;
+
+    /**
+     * Constructs an AppointmentMenu object.
+     */
+    public CLI() {
+        in = new Scanner(System.in);
+    }
+
+    /**
+     * Runs the system.
+     */
+    public void run() {
+        boolean more = true;
+
+        while (more) {
+            System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit"); //application has 3 user types
+            String command = in.nextLine().toUpperCase();
+
+            if (command.equals("E")) {
+                //user is an employee
+                //log in
+                System.out.println("Enter Employee ID");
+                String employeeID = in.nextLine();
+                //assume there an arraylist of employees in admin called employeesArrayList
+                for (int i = 0; i < employeesArrayList.size(); i++) {
+                    if employeeID.equals(employee.getID()){
+                        System.out.println("S)how Employee Details  V)iew Payslip");
+                        String command2 = in.nextLine().toUpperCase();
+                        if (command2.equals("S")) {
+                            //show employee details
+                            System.out.println("Employee ID: " + employee.getEmployeeID());
+                            System.out.println("Name: " + employee.getName());
+                            System.out.println("Position: " + employee.getPosition());
+                            System.out.println("Salary Scale: " + employee.getSalaryScale());
+                            System.out.println("Current Point: " + employee.getCurrentPoint());
+                            if(employee.isFullTime()) {
+                                System.out.println("Employee is full time.");
+                            }else System.out.println("Employee is part time.");
+                        }else if (command2.equals("V")){
+                            //view payslip
+                        }
+                    }
+                }
+
+
+
+            } else if (command.equals("A")) {
+                //user is admin
+                //log in
+                System.out.println("Enter Employee ID");
+                String employeeID = in.nextLine();
+                //add new employee
+                //remove an employee
+            } else if (command.equals("H")) {
+                //user is HR
+                //log in
+                System.out.println("Enter Employee ID");
+                String employeeID = in.nextLine();
+                //implement promotion functionality
+            } else if (command.equals("Q")) {
+                //quit the application
+                more = false;
+            }
+        }
+    }
+}
+
