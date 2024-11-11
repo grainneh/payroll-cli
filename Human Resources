@@ -2,13 +2,11 @@ import java.util.ArrayList;
 
 public class HumanResources {
 
-    private static ArrayList<Employees> employees = new ArrayList<Employees>(); // Static employee list
-
-   
 
     // Method to promote an employee by employeeID
     public void promoteEmployee(String employeeID, String newPosition) {
         // Loop through the employees to find the employee by their ID
+        ArrayList<Employees> employees = Admin.getEmployees();
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeID().equals(employeeID)) {
                 employees.get(i).setPosition(newPosition); // Set the new position
@@ -20,8 +18,6 @@ public class HumanResources {
         System.out.println("Employee not found for promotion.");
     }
 
-    // Method to set the employees list (Optional)
-    public static void setEmployeesList(ArrayList<Employees> employeesList) {
-        employees = employeesList;
-    }
 }
+
+
