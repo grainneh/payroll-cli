@@ -28,18 +28,11 @@ public class Admin extends Employees {
         System.out.println("Employee not found."); // If not found
     }
 
-    // Method to promote an employee
-    public void promoteEmployee(String employeeID, String newPosition) {
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getEmployeeID().equals(employeeID)) {
-                employees.get(i).setPosition(newPosition); // Set new position
-                System.out.println("Employee " + employeeID + " promoted to " + newPosition);
-
-                return;
-            }
-        }
-        System.out.println("Employee not found for promotion.");
+    public static ArrayList<Employees> getEmployees() {
+        return employees;
     }
+
+
 
 
 }
