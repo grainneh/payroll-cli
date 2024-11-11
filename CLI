@@ -46,6 +46,9 @@ public class CLI {
                             }else System.out.println("Employee is part time.");
                         }else if (command2.equals("V")){
                             //view payslip
+                            
+                            //employee needs to enter date 
+                            //go through array list of payslips and print out payslip for the date given
                         }
                     }
                 }
