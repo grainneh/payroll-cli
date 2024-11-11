@@ -1,0 +1,24 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        String path = "/Users/micha/Desktop/testcase.csv";  // Path to the CSV file
+        String line;
+        List<String[]> rows = new ArrayList<>();  // To store rows as arrays of strings
+
+        // Step 1: Read the CSV file and store the content in a list
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            while ((line = br.readLine()) != null) {
+                // Split the line into values and store it in the list
+                String[] values = line.split(",");
+                rows.add(values);
+
+                // Print out the entire row (join elements with commas)
+                System.out.println(String.join(",", values));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
