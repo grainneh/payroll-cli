@@ -1,78 +1,141 @@
-import java.util.ArrayList;
+/**
+ * WORK IN PROGRESS NOT CURRENTLY USABLE
+ *
+ * Class to handle user interaction with the code. Loosely based off the CLI
+ * interface provided in the Appointment class from one of our labs
+ *
+ * Main difference is that I wrote a separate method for the commands to
+ * improve code readibility as there are a lot of options here
+ *
+ * @author Gráinne Hartigan
+ * @date 13/11/2024
+ */
+import java.time.LocalDate;
 import java.util.Scanner;
-
-public class CLI {
-    /**
-     * A menu for the CLI.
-     */
+public class CLI{
+    private String command;
     private Scanner in;
 
     /**
-     * Constructs an AppointmentMenu object.
+     * Constructs a CLI object
      */
-    public CLI() {
+    public CLI(){
         in = new Scanner(System.in);
     }
 
     /**
-     * Runs the system.
+     * Runs the system
      */
-    public void run() {
-        boolean more = true;
+    public void run(){
+        boolean running = true;
 
-        while (more) {
+        while (running){//the code will run while "running" is true
+            //prompt the user to choose if they will log in as an employee, hr staff, or admin
             System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit"); //application has 3 user types
-            String command = in.nextLine().toUpperCase();
-
-            if (command.equals("E")) {
-                //user is an employee
-                //log in
-                System.out.println("Enter Employee ID");
-                String employeeID = in.nextLine();
-                //assume there an arraylist of employees in admin called employeesArrayList
-                for (int i = 0; i < employeesArrayList.size(); i++) {
-                    if employeeID.equals(employee.getID()){
-                        System.out.println("S)how Employee Details  V)iew Payslip");
-                        String command2 = in.nextLine().toUpperCase();
-                        if (command2.equals("S")) {
-                            //show employee details
-                            System.out.println("Employee ID: " + employee.getEmployeeID());
-                            System.out.println("Name: " + employee.getName());
-                            System.out.println("Position: " + employee.getPosition());
-                            System.out.println("Salary Scale: " + employee.getSalaryScale());
-                            System.out.println("Current Point: " + employee.getCurrentPoint());
-                            if(employee.isFullTime()) {
-                                System.out.println("Employee is full time.");
-                            }else System.out.println("Employee is part time.");
-                        }else if (command2.equals("V")){
-                            //view payslip
-                            
-                            //employee needs to enter date 
-                            //go through array list of payslips and print out payslip for the date given
-                        }
-                    }
-                }
-
-
-
-            } else if (command.equals("A")) {
-                //user is admin
-                //log in
-                System.out.println("Enter Employee ID");
-                String employeeID = in.nextLine();
-                //add new employee
-                //remove an employee
-            } else if (command.equals("H")) {
-                //user is HR
-                //log in
-                System.out.println("Enter Employee ID");
-                String employeeID = in.nextLine();
-                //implement promotion functionality
-            } else if (command.equals("Q")) {
-                //quit the application
-                more = false;
+            command = in.nextLine().toUpperCase();
+            if(command.equals("E")){
+                //the user is an employee
+                commandE();
+            }else if (command.equals("A")){
+                //the user is admin
+                commandA();
+            }else if (command.equals("H")){
+                //the user is HR
+                commandH();
+            }else if (command.equals("Q")){
+                //the user has chosen to quit the application
+                running = false;
             }
         }
     }
-}
 
+    private void commandE(){
+        logIn();
+        //assume there an arraylist of employees in admin called employeesArrayList
+        for (int i = 0; i < Admin.employees.size(); i++) {
+            if (logIn().equals(Employee.getEmployeeID())){
+                System.out.println("S)how Employee Details V)iew Payslip");
+                command = in.nextLine().toUpperCase();
+                if (command.equals("S")) {
+                    //show employee details -> THIS SHOULD BE A TOSTRING IN THE EMPLOYEE CLASS
+                    System.out.println("Employee ID: " + employee.getEmployeeID());
+                    System.out.println("Name: " + employee.getName());
+                    System.out.println("Position: " + employee.getPosition());
+                    System.out.println("Salary Scale: " + employee.getSalaryScale());
+                    System.out.println("Current Point: " + employee.getCurrentPoint());
+                    if(employee.isFullTime()) {
+                        System.out.println("Employee is full time.");
+                    }else System.out.println("Employee is part time.");
+                }else if (command.equals("V")){
+                    //view payslip
+
+                    //employee needs to enter date of the payslip they want to see
+                    System.out.println("Please enter date (dd/MM/yyyy):");
+                    String dateString = in.nextLine();
+
+                    //create an array to store the parts of the date
+                    String[] dateParts = dateString.split("/");
+                    int day = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int year = Integer.parseInt(dateParts[2]);
+                    LocalDate date = LocalDate.of(year, month, day); //this is the date the employee has entered
+
+                    //go through array list of payslips and print out payslip for the date given
+                    for (int i = 0; i<Employee.payslips.size(); i++){ //made payslips public in employee so that it could be accessed here
+                        if(Employee.payslips.getDate().equals(date)){
+                            System.out.println(PaySlip2.generatePayslip());
+                        }else System.out.println("There is no payslip found for this date.");
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private void commandA(){
+        logIn();
+        //admin can add or remove an employee
+        System.out.println("A)dd employee     R)emove employee");
+        command = in.nextLine().toUpperCase();
+        if (command.equals("A")) {
+            //add employee
+            System.out.println("Enter Employee ID");
+            String employeeID = in.nextLine();
+            Admin.addEmployee(employeeID);
+            System.out.println("Employee " + employeeID + " added.");
+
+        }else if (command.equals("R")) {
+            //remove employee
+            System.out.println("Enter Employee ID");
+            String employeeID = in.nextLine();
+            Admin.removeEmployee(employeeID);
+        }
+    }
+
+    private void commandH(){
+        logIn();
+        //implement promotion functionality
+        System.out.println("P)romote employee");
+        System.out.println("Enter employee ID");
+        String employeeID = in.nextLine();
+        System.out.println("Enter new position");
+        String position = in.nextLine();
+        HumanResources.promoteEmployee(employeeID, position);
+    }
+
+    /**
+     * This method allows an employee to enter their id and log in
+     */
+    private String logIn(){
+        System.out.println("Please enter employee ID to log in");
+        String employeeID = in.nextLine();
+        //check if employee exists
+        for(int i =0; i < Admin.getEmployees().size()){
+            if(Admin.getEmployees().get(i).getEmployeeID().equals(employeeID)){
+                System.out.println(Employee.getName() + "(" + employeeID + ") logged in.");
+            }else System.out.println("User not found.");
+        }
+        return employeeID;
+    }
+}
