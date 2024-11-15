@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Employees{
+public class Employee{
     String employeeID;
     String name;
     String position;
@@ -8,7 +8,6 @@ public class Employees{
     int currentPoint;
     boolean isFullTime;
     List<Payslip> payslips = new ArrayList<Payslip>();
-    List<employees> employees = new ArrayList<employees>();
 
     public Employee(String employeeID, String name, String position, String salaryScale, int currentPoint, boolean isFullTime, List<Payslip> payslips, List<employees> employees){
         this.employeeID = employeeID;
@@ -46,10 +45,6 @@ public class Employees{
         }
     }
 
-    public void setEmployeeID(String employeeID){
-        this.employeeID = employeeID;
-    }
-
     public void setName(String name){
         this.name = name;
     }
@@ -58,7 +53,12 @@ public class Employees{
         this.position = position;
     }
 
-    public void setSalaryScale(int salaryScale){
+    public void setSalaryScale(String salaryScale){
         this.salaryScale = salaryScale;
+    }
+
+    public String toString(){
+        System.out.println("Employee ID: " + employeeID + "Name" + name + "Position" + position + "SalaryScale" + salaryScale);
+        return "";
     }
 }
