@@ -44,12 +44,12 @@ public class Employee{
             return false;
         }
     }
-    
+
     public String printFullTime(){
         if(isFullTime == true){
-            System.out.println("Employee is Full Time");
+            return "Full Time";
         }else{
-            System.out.println("Employee is Part Time");
+            return "Full Time";
         }
     }
 
@@ -67,6 +67,6 @@ public class Employee{
 
     @Override
     public String toString(){
-        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint + "\n" + "Full Time: " + printFullTime() + "\n" + "Part Time: " + printFullTime() + "\n";
+        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint + "\n" + printFullTime();
     }
 }
