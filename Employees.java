@@ -49,7 +49,7 @@ public class Employee{
         if(isFullTime == true){
             return "Full Time";
         }else{
-            return "Full Time";
+            return "Part Time";
         }
     }
 
