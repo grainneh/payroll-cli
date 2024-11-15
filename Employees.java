@@ -7,7 +7,7 @@ public class Employee{
     String salaryScale;
     int currentPoint;
     boolean isFullTime;
-    List<Payslip> payslips = new ArrayList<Payslip>();
+    ArrayList<Payslip> payslips = new ArrayList<Payslip>();
 
     public Employee(String employeeID, String name, String position, String salaryScale, int currentPoint, boolean isFullTime, List<Payslip> payslips, List<employees> employees){
         this.employeeID = employeeID;
@@ -40,8 +40,16 @@ public class Employee{
     public boolean isFullTime(){
         if(isFullTime == true){
             return true;
-        }else{
+        }else {
             return false;
+        }
+    }
+    
+    public String printFullTime(){
+        if(isFullTime == true){
+            System.out.println("Employee is Full Time");
+        }else{
+            System.out.println("Employee is Part Time");
         }
     }
 
@@ -59,6 +67,6 @@ public class Employee{
 
     @Override
     public String toString(){
-        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint;
+        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint + "\n" + "Full Time: " + printFullTime() + "\n" + "Part Time: " + printFullTime() + "\n";
     }
 }
