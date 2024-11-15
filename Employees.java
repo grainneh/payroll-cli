@@ -57,8 +57,8 @@ public class Employee{
         this.salaryScale = salaryScale;
     }
 
+    @Override
     public String toString(){
-        System.out.println("Employee ID: " + employeeID + "Name" + name + "Position" + position + "SalaryScale" + salaryScale);
-        return "";
+        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint;
     }
 }
