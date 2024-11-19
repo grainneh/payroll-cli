@@ -21,7 +21,7 @@ public class Admin {
 
 
     public  void LoadCSV() {
-        String path =  "/Users/micha/Desktop/employees.csv";
+        String path =  "employees.csv";
         String line = "";
 
         try {
