@@ -14,10 +14,13 @@ import java.util.ArrayList;
 
 public class Admin {
 
+    public Admin(){
+
+    }
     private static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
 
 
-    public  void LoadCSV(String[] args) {
+    public  void LoadCSV() {
         String path =  "/Users/micha/Desktop/employees.csv";
         String line = "";
 
@@ -66,7 +69,7 @@ public class Admin {
                 return;
             }
         }
-        System.out.println("Employee not found."); // If not found
+
     }
 
     public static ArrayList<Employee> getEmployees () {
@@ -78,7 +81,7 @@ public class Admin {
 
     }
 
-    public void updateCSV (ArrayList < Employee > employees) {
+    public void updateCSV () {
         String filePath = "employees.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row (if needed)
