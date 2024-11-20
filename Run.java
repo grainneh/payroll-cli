@@ -1,0 +1,13 @@
+import java.io.IOException;
+
+/**
+ * Runs the CLI
+ */
+public class Run {
+    public static void main(String[] args)
+            throws IOException
+    {
+        CLI cli = new CLI();
+        cli.run();
+    }
+}

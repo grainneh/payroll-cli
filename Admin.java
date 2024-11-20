@@ -12,6 +12,8 @@ the add/remove worked correctly.
 import java.io.*;
 import java.util.ArrayList;
 
+import static java.lang.Integer.parseInt;
+
 public class Admin {
 
     public Admin(){
@@ -23,11 +25,16 @@ public class Admin {
     public  void LoadCSV() {
         String path =  "employees.csv";
         String line = "";
+        boolean firstLine =true;
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
 
             while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;  // Set flag to false after processing the header
+                    continue;  // Skip this iteration (header row)
+                }
                 String[] values = line.split(",");
                 if (values.length == 6) {
                     String employeeID = values[0];
@@ -41,9 +48,10 @@ public class Admin {
                     employees.add(employee);
 
                 }
-                System.out.println("CSV loaded");
+
 
             }
+            System.out.println("CSV Loaded");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
