@@ -27,15 +27,14 @@ public class Deductions {
      *
      * @return grossMonthlyPay  the employee's gross monthly pay
      */
-    public double calculateGrossMonthlyPay() {
+    public void calculateGrossMonthlyPay(double hours, double pay) {
         if (employee.getIsFullTime()) {
-            grossMonthlyPay = 120000  /12; //assume salary is annual -> divide by 12 for monthly pay
+            grossMonthlyPay = 12000  /12; //assume salary is annual -> divide by 12 for monthly pay
             //issue remains with determining the employees salary, needs to come from csv i think
         } else {
-            grossMonthlyPay = 35 * 12.70;
+            grossMonthlyPay = hours * pay;
             //employee submits their hours worked in the CLI, their hourly rate should be included in employee class
         }
-        return grossMonthlyPay;
     }
 
     /**
@@ -45,7 +44,7 @@ public class Deductions {
      * @return  the gross monthly pay
      */
     public double grossMonthlyPay(){
-        return calculateGrossMonthlyPay();
+        return grossMonthlyPay;
     }
 
 

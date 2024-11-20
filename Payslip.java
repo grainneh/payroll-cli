@@ -19,8 +19,8 @@ public class Payslip {
     Employee employee; //employee whos pay is to be calculated
     String name; //employee name
     String employeeID; //employee ID
-    LocalDate todaysDate; //today's date
-    int payDay; //employees need to be paid on the 25th of each month
+    static LocalDate todaysDate; //today's date
+    static int payDay; //employees need to be paid on the 25th of each month
 
     public Payslip(Employee employee) { //issue remains with determining the employees salary, needs to come from csv i think
         name = employee.getName();
@@ -35,11 +35,11 @@ public class Payslip {
      *
      * @return a string representation of the employee's payslip
      */
-    public String generatePayslip() {
+    public static String generatePayslip(Employee employee) {
         if (payDay == 25) { //if it is the 25th of the month generate a payslip
             Deductions deductions = new Deductions(employee); //calculate the deductions for the employee in question
             return "Payslip " + todaysDate +
-                    "\n" + name + " (" + employeeID + ")" +
+                    "\n" + employee.getName() + " (" + employee.getEmployeeID() + ")" +
                     "\nGross pay: €" + deductions.grossMonthlyPay() +
                     "\n ---------------------------------------" +
                     "\nDEDUCTIONS:" +
@@ -50,7 +50,9 @@ public class Payslip {
                     "\nUnion Contribution: €" + 12.35 +
                     "\n ---------------------------------------" +
                     "\nNET PAY: €" + deductions.netPay();
-        }else return "Payslip cannot be generated today. It is not the 25th of the month.";
+        }else {
+            return "Payslip cannot be generated today. It is not the 25th of the month.";
+        }
     }
 
     public LocalDate getDate() {

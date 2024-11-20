@@ -16,26 +16,25 @@ import java.time.YearMonth;
 @date 7.11.2024
  */
 public class PayClaim {
-    Boolean payClaimed = false; //set for individual employees
-    Boolean ableToClaim = true; //set for individual employees
 
-    public void validateClaim(Employees e) {
+    Employee e = new Employee();
+    public static void validateClaim(Employee e) {
         LocalDate today = LocalDate.now(); //day employee submits claim
 
         YearMonth thisMonth = YearMonth.now();
         LocalDate secondFriday = getSecondFriday(thisMonth);
 
-        if(ableToClaim){ //Automatically true. Can be changed from firing etc.
+        if(e.ableToClaim){ //Automatically true. Can be changed from firing etc.
 
-            if(payClaimed){ //pay already claimed this month
+            if(e.payClaimed){ //pay already claimed this month
                 System.out.println("Pay already claimed");
-            } if (!payClaimed && today.isBefore(secondFriday)){
-                //pay employee
-                ableToClaim = false;
-                payClaimed = true;
+            } if (!e.payClaimed && today.isBefore(secondFriday)){
+                Payslip.generatePayslip(e);
+                e.ableToClaim = false;
+                e.payClaimed = true;
             } else {
                 System.out.println("Pay not claimed before 2nd Friday. Unable to claim pay this month");
-                ableToClaim = false;
+                e.ableToClaim = false;
             }
         } else{
             System.out.println("Unable to claim pay");

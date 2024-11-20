@@ -8,6 +8,10 @@ public class Employee {
     int currentPoint;
     boolean isFullTime; // Changed to instance variable
     public static ArrayList<Payslip> payslips = new ArrayList<Payslip>();
+    Boolean payClaimed = false; //set for individual employees
+    Boolean ableToClaim = true; //set for individual employees
+
+    public Employee(){}
     // Constructor
     public Employee(String employeeID, String name, String position, String salaryScale, int currentPoint, boolean isFullTime) {
         this.employeeID = employeeID;
