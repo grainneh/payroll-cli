@@ -27,13 +27,14 @@ public class Deductions {
      *
      * @return grossMonthlyPay  the employee's gross monthly pay
      */
-    public void calculateGrossMonthlyPay(double hours, double pay) {
+    public void calculateGrossMonthlyPay() {
         if (employee.getIsFullTime()) {
-            grossMonthlyPay = 12000  /12; //assume salary is annual -> divide by 12 for monthly pay
+            grossMonthlyPay = 12000 / 12; //assume salary is annual -> divide by 12 for monthly pay
             //issue remains with determining the employees salary, needs to come from csv i think
-        } else {
-            grossMonthlyPay = hours * pay;
-            //employee submits their hours worked in the CLI, their hourly rate should be included in employee class
+        }else {
+            grossMonthlyPay = CLI.hours * Employee.getPayRate();
+            //employee submits their hours worked in the CLI
+            // getPayRate method needs to exist in the Employee class for part-time employees, should be in constructor
         }
     }
 
