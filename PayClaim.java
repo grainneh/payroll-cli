@@ -29,6 +29,7 @@ public class PayClaim {
             if(e.payClaimed){ //pay already claimed this month
                 System.out.println("Pay already claimed");
             } if (!e.payClaimed && today.isBefore(secondFriday)){
+               Payslip payslip = new Payslip(e);
                 Payslip.generatePayslip(e);
                 e.ableToClaim = false;
                 e.payClaimed = true;
