@@ -225,8 +225,16 @@ public class CLI{
         return input;
     }
 
-    public void commandP(){
-
+   public void commandP(){
+        try {
+            System.out.println("Submit pay claim.");
+            System.out.println("Please enter number of hours worked:");
+            hours = Integer.parseInt(in.nextLine().trim());
+        }catch(NumberFormatException e){
+            System.out.println("Please enter the number of hours worked.");
+        }
+            System.out.println(hours + " submitted.");
+            PayClaim.validateClaim(employee);
     }
 }
 
