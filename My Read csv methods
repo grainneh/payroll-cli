@@ -1,0 +1,36 @@
+ public  void LoadCSV() {
+        String path =  "employees.csv";
+        String line = "";
+        boolean firstLine =true;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;  // Set flag to false after processing the header
+                    continue;  // Skip this iteration (header row)
+                }
+                String[] values = line.split(",");
+                if (values.length == 6) {
+                    String employeeID = values[0];
+                    String name = values[1];
+                    String position = values[2];
+                    String salaryScale = values[3];
+                    int currentPoint = Integer.parseInt(values[4]);
+                    boolean isFullTime = values[5].equalsIgnoreCase("Yes");
+
+                    Employee employee = new Employee(employeeID, name, position, salaryScale, currentPoint, isFullTime);
+                    employees.add(employee);
+
+                }
+
+
+            }
+            System.out.println("CSV Loaded");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
