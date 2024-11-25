@@ -16,6 +16,8 @@ import static java.lang.Integer.parseInt;
 
 public class Admin {
 
+
+
     public Admin(){
 
     }
@@ -23,7 +25,9 @@ public class Admin {
 
 
     public  void LoadCSV() {
-        String path =  "employees.csv";
+
+        String path = "\"C:\\UL Files\\Semester 3\\CS4013\\Project\\11.20\\src\\employees.csv\"";
+
         String line = "";
         boolean firstLine =true;
 
@@ -44,7 +48,7 @@ public class Admin {
                     int currentPoint = Integer.parseInt(values[4]);
                     boolean isFullTime = values[5].equalsIgnoreCase("Yes");
 
-                    Employee employee = new Employee(employeeID, name, position, salaryScale, currentPoint, isFullTime);
+                    Employee employee = new Employee(employeeID, name, position, salaryScale, currentPoint);
                     employees.add(employee);
 
                 }
@@ -53,7 +57,7 @@ public class Admin {
             }
             System.out.println("CSV Loaded");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Incorrect path name used");
         } catch (IOException e) {
             e.printStackTrace();
         }
