@@ -29,6 +29,20 @@ public class HumanResources {
         // If no employee is found with the given ID
         System.out.println("Employee not found for promotion.");
     }
+    public void employeeRaise(String employeeID, int payRate) {
+        // Loop through the employees to find the employee by their ID
+        ArrayList<Employee> employees = Admin.getEmployees();
+        for (int i = 0; i < employees.size(); i++) {
+            if (employees.get(i).getEmployeeID().equals(employeeID)) {
+                employees.get(i).setPayRate(payRate);// Set the new position
+
+                System.out.println("Employee " + employeeID + " pay set to " + payRate );
+                return; // Exit method once raise is done
+            }
+        }
+        // If no employee is found with the given ID
+        System.out.println("Employee not found for raise.");
+    }
 
 }
 
