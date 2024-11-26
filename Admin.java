@@ -1,3 +1,4 @@
+
 /*
 This class uses two methods:one to remove and one to add employees to the employees array.
 addEmployee simply uses .add() to add an employee to the array. RemoveEmployee uses a for loop to
@@ -10,6 +11,7 @@ the add/remove worked correctly.
 
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
@@ -22,7 +24,8 @@ public class Admin {
 
     }
     private static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
-
+    Deductions deductions;
+    Payslip payslip;
 
     public  void LoadCSV() {
 
@@ -46,7 +49,7 @@ public class Admin {
                     String position = values[2];
                     String salaryScale = values[3];
                     int currentPoint = Integer.parseInt(values[4]);
-                    boolean isFullTime = values[5].equalsIgnoreCase("Yes");
+
 
                     Employee employee = new Employee(employeeID, name, position, salaryScale, currentPoint);
                     employees.add(employee);
@@ -115,6 +118,45 @@ public class Admin {
         } catch (IOException e) {
             System.out.println("Error writing to the CSV file: " + e.getMessage());
         }
+    }
+
+    private void CreateEmployeeCSV(Employee employee) {
+        String filename = employee.getEmployeeID() + "information.csv";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+          writer.write("ID , Name, Position, SalaryPoint, isFullTime ");
+          writer.newLine();
+          writer.write(employee.getEmployeeID() + "," + employee.getName()+ "," + employee.getPosition() + "." + employee.getCurrentPoint() + ","
+                           + employee.getIsFullTime());// writes all the employees details in order of the parameters
+          writer.newLine();
+
+          writer.write("This Epmloyees Payslips");
+          writer.newLine();
+          writer.write("GrossPay, NetPay,  date");
+          writer.newLine();
+
+
+            for (Payslip payslip : employee.getPayslips()) {
+                writer.write(deductions.grossMonthlyPay +","+ deductions.netPay +","+ payslip.todaysDate);
+                writer.newLine();
+            }
+            System.out.println("CSV created for Employee: " + employee.getName());
+        } catch (IOException e) {
+            System.out.println("Error creating CSV for Employee " + employee.getName() + ": " + e.getMessage());
+
+        }
+
+    }
+
+    public void addPayslipToEmployee(String employeeID, Payslip payslip) {
+        for (Employee employee : employees) {
+            if (employee.getEmployeeID().equals(employeeID)) {
+                employee.addPayslip(payslip);
+                CreateEmployeeCSV(employee); // Update CSV with the new payslip
+                System.out.println("Payslip added for Employee: " + employee.getName());
+                return;
+            }
+        }
+        System.out.println("Employee with ID " + employeeID + " not found.");
     }
 
 }
