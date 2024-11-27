@@ -29,7 +29,7 @@ public class HumanResources {
         // If no employee is found with the given ID
         System.out.println("Employee not found for promotion.");
     }
-    public void employeeRaise(String employeeID, int payRate) {
+    public void employeeRaise(String employeeID, double payRate) {
         // Loop through the employees to find the employee by their ID
         ArrayList<Employee> employees = Admin.getEmployees();
         for (int i = 0; i < employees.size(); i++) {
