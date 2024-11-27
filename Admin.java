@@ -29,7 +29,7 @@ public class Admin {
 
     public  void LoadCSV() {
 
-        String path = "\"C:\\UL Files\\Semester 3\\CS4013\\Project\\11.20\\src\\employees.csv\"";
+        String path = "employees.csv";
 
         String line = "";
         boolean firstLine =true;
@@ -43,6 +43,7 @@ public class Admin {
                     continue;  // Skip this iteration (header row)
                 }
                 String[] values = line.split(",");
+
                 if (values.length == 6) {
                     String employeeID = values[0];
                     String name = values[1];
@@ -71,6 +72,7 @@ public class Admin {
     public void addEmployee (Employee employee){
         employees.add(employee);// Add employee to the list
         System.out.println("Employee " + employee.getName() + " added");
+        CreateEmployeeCSV(employee);// creates a employees personal csv
     }
 
     // Method to remove an employee by their employee ID
