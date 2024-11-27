@@ -1,170 +1,162 @@
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 /**
  * Class to handle user interaction with the code. Loosely based off the CLI
  * interface provided in the Appointment class from one of our labs
- *
+ * <p>
  * Main difference is that I wrote a separate method for the commands to
  * improve code readability as there are a lot of options here
  *
  * @author Gráinne Hartigan
  * @date 13/11/2024
  */
-import java.time.LocalDate;
-import java.util.Scanner;
-public class CLI{
+public class CLI {
+    Employee newEmployee;
     private String command;
     private Scanner in;
     private Employee employee;
     private Payslip payslip;
     private Admin admin;
     private HumanResources humanResources;
-    private ArrayList<String> partTimeEmployees = {
-            "Library staff",
-            "Security",
-            "Spar staff",
-            "Barista",
-            "Bartender"
-    }
-    private ArrayList<String> fullTimeEmployees = {
-            "President",
-"Vice President",
-"Full Professor",
-"Professor",
-"Associate Professor A",
-"Associate Professor B",
-"Assistant Professor",
-"Teaching Assistant",
-"Senior Administrative Officer III",
-"Senior Administrative Officer II",
-"Senior Administrative Officer I",
-"Senior Executive Administrator",
-"Executive Administrator",
-"Senior Administrator",
-"Administrator",
-"EPS Portfolio Manager",
-"EPS Category Manager",
-"EPS Category Specialist",
-"EPS Category Specialist Higher",
-"Sub Librarian",
-"Assistant Librarian",
-"Senior Library Assistant",
-"Library Assistant",
-"Library Attendant",
-"Analyst Programmer",
-"Senior Computer Operator",
-"Computer Operator",
-"Print Operator",
-"Computer Lab Attendant",
-"Temporary Computer Assistant",
-"Chief Technical Officer",
-"Technical Officer",
-"Senior Techical Officer",
-"Senior Lab Attendant",
-"Laboratory Attendant",
-"Sen Porter/Attendant",
-"Porter/Attendant",
-"Grounds Supervisor",
-"Groundsworkperson",
-"Senior Aide",
-"Machine Attendant",
-"Service Staff",
-"Service Staff Shift",
-"Plant Maintenance Aide",
-"Grounds Foreperson",
-"Teaching Fellow",
-"University Teacher",
-"Associate Teacher",
-"Regional Placement Facilitator",
-"Clinical Tutor",
-"Clinical Fellow",
-"Assistant Senior Instructor",
-"Lead Instructor",
-"Multi Activity Instructor",
-"Assistant Instructor", 
-"Co-Op Students",
-
-    }
-    private ArrayList<int> maxPoints = {
-        0,
-0,
-6,
-6,
-9,
-9
-10,
-2,
-6,
-9,
-12,
-11,
-11,
-12,
-18,
-6,
-8,
-8,
-8,
-15,
-11,
-13,
-10,
-14,
-10,
-10,
-10,
-8,
-9,
-9,
-6,
-10,
-6,
-5,
-9,
-13,
-15,
-13,
-15,
-13,
-15,
-15,
-15,
-2,
-6,
-9,
-10,
-10,
-9,
-6,
-7,
-1,
-1,
-2,
-2,
-2
-
-    }
-        
-    Employee newEmployee;
-
-    /**
-     * Constructs a CLI object
-     */
-    public CLI(){
+    private ArrayList<String> validPartTimeEmployees = new ArrayList<>(
+            Arrays.asList("Library staff",
+                    "Security",
+                    "Spar staff",
+                    "Barista",
+                    "Bartender")
+    );
+    private ArrayList<String> validFullTimeEmployees = new ArrayList<>(
+            Arrays.asList("President",
+                    "Vice President",
+                    "Full Professor",
+                    "Professor",
+                    "Associate Professor A",
+                    "Associate Professor B",
+                    "Assistant Professor",
+                    "Teaching Assistant",
+                    "Senior Administrative Officer III",
+                    "Senior Administrative Officer II",
+                    "Senior Administrative Officer I",
+                    "Senior Executive Administrator",
+                    "Executive Administrator",
+                    "Senior Administrator",
+                    "Administrator",
+                    "EPS Portfolio Manager",
+                    "EPS Category Manager",
+                    "EPS Category Specialist",
+                    "EPS Category Specialist Higher",
+                    "Sub Librarian",
+                    "Assistant Librarian",
+                    "Senior Library Assistant",
+                    "Library Assistant",
+                    "Library Attendant",
+                    "Analyst Programmer",
+                    "Senior Computer Operator",
+                    "Computer Operator",
+                    "Print Operator",
+                    "Computer Lab Attendant",
+                    "Temporary Computer Assistant",
+                    "Chief Technical Officer",
+                    "Technical Officer",
+                    "Senior Techical Officer",
+                    "Senior Lab Attendant",
+                    "Laboratory Attendant",
+                    "Sen Porter/Attendant",
+                    "Porter/Attendant",
+                    "Grounds Supervisor",
+                    "Groundsworkperson",
+                    "Senior Aide",
+                    "Machine Attendant",
+                    "Service Staff",
+                    "Service Staff Shift",
+                    "Plant Maintenance Aide",
+                    "Grounds Foreperson",
+                    "Teaching Fellow",
+                    "University Teacher",
+                    "Associate Teacher",
+                    "Regional Placement Facilitator",
+                    "Clinical Tutor",
+                    "Clinical Fellow",
+                    "Assistant Senior Instructor",
+                    "Lead Instructor",
+                    "Multi Activity Instructor",
+                    "Assistant Instructor",
+                    "Co-Op Students")
+    );
+    private ArrayList<Integer> maxPoints = new ArrayList<>(
+            Arrays.asList(0,
+                    0,
+                    6,
+                    6,
+                    9,
+                    9,
+                    10,
+                    2,
+                    6,
+                    9,
+                    12,
+                    11,
+                    11,
+                    12,
+                    18,
+                    6,
+                    8,
+                    8,
+                    8,
+                    15,
+                    11,
+                    13,
+                    10,
+                    14,
+                    10,
+                    10,
+                    10,
+                    8,
+                    9,
+                    9,
+                    6,
+                    10,
+                    6,
+                    5,
+                    9,
+                    13,
+                    15,
+                    13,
+                    15,
+                    13,
+                    15,
+                    15,
+                    15,
+                    2,
+                    6,
+                    9,
+                    10,
+                    10,
+                    9,
+                    6,
+                    7,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2)
+    );
+    public CLI() {
         in = new Scanner(System.in);
         admin = new Admin();
         humanResources = new HumanResources(); //intialize HR
     }
-
-    /**
-     * Runs the system
-     */
-    public void run(){
+    public void run() {
         boolean running = true;
         admin.LoadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
 
         while (running) {
             System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit (Press Q at any point to quit)");
             command = in.nextLine().toUpperCase();
-            if(command.equals("Q")){
+            if (command.equals("Q")) {
                 running = false;
             }
             switch (command) {
@@ -177,30 +169,25 @@ public class CLI{
                 case "H":
                     commandH();
                     break;
-                case "Q":
-                    running = false;
-                    break;
                 default:
                     System.out.println("Invalid option. Please enter E, A, H, or Q.");
             }
         }
 
     }
-
-    private void commandE(){
-        if (logIn()){
+    private void commandE() {
+        if (logIn()) {
             System.out.println("E)mployee Details V)iew Payslip S)ubmit payclaim");
-
+            command = in.nextLine().toUpperCase();
             if (command.equals("E")) {
                 System.out.println(employee.toString());
-            }else if (command.equals("V")){
+            } else if (command.equals("V")) {
                 commandV();
-            } else if (command.equals("S")){
+            } else if (command.equals("S")) {
                 commandP();
             }
         }
     }
-
     private void commandV() {
         System.out.println("Please enter payslip date (dd/MM/yyyy):");
         String dateString = in.nextLine().trim();
@@ -229,10 +216,8 @@ public class CLI{
             System.out.println("Invalid date format or invalid date. Please use dd/MM/yyyy.");
         }
     }
-
-
-    private void commandA(){
-        if(logIn()) {
+    private void commandA() {
+        if (logIn()) {
             //admin can add or remove an employee
             System.out.println("A)dd employee     R)emove employee");
             command = in.nextLine().toUpperCase();
@@ -247,84 +232,6 @@ public class CLI{
             }
         }
     }
-
-    private void commandAa() {
-        System.out.println("F)ull time or P)art time");
-        command = in.nextLine().toUpperCase();
-        if (command.equals("F")) {
-
-                String employeeID = EmptyInputHandling("Enter Employee ID");
-                String name = EmptyInputHandling("Enter Employee Name");
-                String position = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
-                System.out.println("Enter point on scale"); //check valid points against position
-                int currentPoint = -1;
-                while (currentPoint < 0) { // add a max depending on valid current point scale from array
-                    try {
-                        currentPoint = Integer.parseInt(in.nextLine().trim());
-                        if (currentPoint < 0) {
-                            System.out.println("Salary scale must be a positive number.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number.");
-                    }
-                }
-                newEmployee = new Employee(employeeID,name,position,currentPoint);
-        }else if (command.equals("P")){
-            String employeeID = EmptyInputHandling("Enter Employee ID");
-            String name = EmptyInputHandling("Enter Employee Name");
-            String position = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
-            int payRate = -1;
-            while(payRate < 0 ) {
-                try {
-                    payRate = Integer.parseInt(EmptyInputHandling("Enter Employee Pay Rate"));
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a valid number.");
-                }
-            }
-            newEmployee = new Employee(employeeID,name,position,payRate);
-        }
-    }
-
-
-    private void commandH(){
-        if(logIn()) {
-            //implement promotion functionality
-            boolean t = false;
-            while( !t) {
-                System.out.println("P)romote employee G)ive raise ");
-                command = in.nextLine().toUpperCase();
-                if (command.equals("P")) {
-                    System.out.println("Enter employee ID:");
-                    String employeeID = in.nextLine();
-                    System.out.println("Enter new position:");
-                    String position = in.nextLine();
-
-                    humanResources.promoteEmployee(employeeID, position);
-                    t = true;
-                }
-                if (command.equals("G")) {
-                    System.out.println("Enter employee ID:");
-                    String employeeID = in.nextLine();
-                    System.out.println("Enter new pay rate:");
-                    try {
-                        int payRate = Integer.parseInt(in.nextLine().trim());
-                        humanResources.employeeRaise(employeeID,payRate);
-                        t = true;
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input for new pay rate");
-                    }
-                    // change employees pay rate
-
-                }
-            }
-
-
-        }
-    }
-
-    /**
-     * This method allows an employee to enter their id and log in
-     */
     private boolean logIn() {
         System.out.println("Please enter employee ID to log in:");
         String employeeID = in.nextLine().trim();
@@ -343,8 +250,135 @@ public class CLI{
         System.out.println("User not found. Please check your Employee ID.");
         return false;
     }
+    private void commandH() {
+        if (logIn()) {
+            //implement promotion functionality
+            boolean t = false;
+            while (!t) {
+                System.out.println("P)romote employee G)ive raise ");
+                command = in.nextLine().toUpperCase();
+                if (command.equals("P")) {
+                    System.out.println("Enter employee ID:");
+                    String employeeID = in.nextLine();
+                    System.out.println("Enter new position:");
+                    String position = in.nextLine();
 
-    private String EmptyInputHandling (String message) {
+                    humanResources.promoteEmployee(employeeID, position);
+                    t = true;
+                }
+                if (command.equals("G")) {
+                    System.out.println("Enter employee ID:");
+                    String employeeID = in.nextLine();
+                    System.out.println("Enter new pay rate:");
+                    try {
+                        int payRate = Integer.parseInt(in.nextLine().trim());
+                        humanResources.employeeRaise(employeeID, payRate);
+                        t = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input for new pay rate");
+                    }
+                    // change employees pay rate
+
+                }
+            }
+
+
+        }
+    }
+    private void commandAa() {
+        System.out.println("F)ull time or P)art time");
+        command = in.nextLine().toUpperCase();
+        if (command.equals("F")) {
+            String employeeID = EmptyInputHandling("Enter Employee ID");
+            String name = EmptyInputHandling("Enter Employee Name");
+            String position = null;
+            while (position == null) {
+                String attempt = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
+                for (String s : validFullTimeEmployees) {
+                    if (s.equals(attempt)) {
+                        position = attempt;
+                        break;
+                    }
+                }
+                if (position == null) {
+                    System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
+                    command = in.nextLine().toUpperCase();
+                    if (command.equals("Y")) {
+                        viewValidFullTimeEmployees();
+                    } else {
+                        // If input is anything else, go back to the start of the loop
+                        System.out.println("Returning to input prompt.");
+                    }
+                }
+            }
+            // get array element from position entered
+            int i = validFullTimeEmployees.indexOf(position);
+            //set max currentPoint to element from points array
+            int maxPoint = maxPoints.get(i);
+            System.out.printf("Enter point on scale between 1 and %d for %s", maxPoint, position); //check valid points against position
+            int currentPoint = -1;
+            while (currentPoint < 0 || currentPoint > maxPoint) { // add a max depending on valid current point scale from array
+                try {
+                    currentPoint = Integer.parseInt(in.nextLine().trim());
+                    if (currentPoint < 0) {
+                        System.out.println("Salary scale must be a positive number.");
+                    }
+                    if (currentPoint > maxPoint) {
+                        System.out.println("Salary scale must be within the valid range");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
+            }
+
+            newEmployee = new Employee(employeeID, name, position, currentPoint);
+            admin.addEmployee(newEmployee);
+        }
+        if (command.equals("P")) {
+            String employeeID = EmptyInputHandling("Enter Employee ID");
+            String name = EmptyInputHandling("Enter Employee Name");
+            String position = null;
+            while (position == null) {
+                String attempt = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
+                for (String s : validPartTimeEmployees) {
+                    if (s.equals(attempt)) {
+                        position = attempt;
+                        break;
+                    }
+                }
+                if (position == null) {
+                    System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
+                    command = in.nextLine().toUpperCase();
+                    if (command.equals("Y")) {
+                        viewValidPartTimeEmployees();
+                    } else {
+                        // If input is anything else, go back to the start of the loop
+                        System.out.println("Returning to input prompt.");
+                    }
+                }
+            }
+            double payRate = -1;
+            while (payRate < 0) {
+                try {
+                    payRate = Integer.parseInt(EmptyInputHandling("Enter Employee Hourly Pay Rate"));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
+            }
+            newEmployee = new Employee(employeeID, name, position, payRate); //exchange with addPartTime when written
+        }
+    }
+    private void viewValidFullTimeEmployees() {
+        for (String s : validFullTimeEmployees) {
+            System.out.println(s);
+        }
+    }
+    private void viewValidPartTimeEmployees() {
+        for (String s : validPartTimeEmployees) {
+            System.out.println(s);
+        }
+    }
+    private String EmptyInputHandling(String message) {
         String input;
         do {
             System.out.println(message);
@@ -355,8 +389,7 @@ public class CLI{
         } while (input.isEmpty());
         return input;
     }
-
-    public void commandP(){
+    public void commandP() {
         try {
             if (employee.getIsFullTime()) {
                 System.out.println("Employee is full-time, pay claim cannot be submitted.");
@@ -368,9 +401,8 @@ public class CLI{
                 PayClaim.validateClaim(employee);
             }
 
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Please enter the number of hours worked.");
         }
     }
 }
-
