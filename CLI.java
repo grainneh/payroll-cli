@@ -271,7 +271,7 @@ public class CLI {
                     String employeeID = in.nextLine();
                     System.out.println("Enter new pay rate:");
                     try {
-                        int payRate = Integer.parseInt(in.nextLine().trim());
+                        int payRate = Double.parseDouble(in.nextLine().trim());
                         humanResources.employeeRaise(employeeID, payRate);
                         t = true;
                     } catch (NumberFormatException e) {
