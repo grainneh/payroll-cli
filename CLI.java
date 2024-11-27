@@ -36,8 +36,11 @@ public class CLI{
         admin.LoadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
 
         while (running) {
-            System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit");
+            System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit (Press Q at any point to quit)");
             command = in.nextLine().toUpperCase();
+            if(command.equals("Q")){
+                running = false;
+            }
             switch (command) {
                 case "E":
                     commandE();
@@ -66,7 +69,7 @@ public class CLI{
                 System.out.println(employee.toString());
             }else if (command.equals("V")){
                 commandV();
-            } else if (command.equals("s")){
+            } else if (command.equals("S")){
                 commandP();
             }
         }
@@ -120,58 +123,39 @@ public class CLI{
     }
 
     private void commandAa() {
-        try {
-            String employeeID = EmptyInputHandling("Enter Employee ID:"); // add check that string is numbers and of correct length
-            String name = EmptyInputHandling("Enter name:");
+        System.out.println("F)ull time or P)art time");
+        command = in.nextLine().toUpperCase();
+        if (command.equals("F")) {
 
-
-            String position = EmptyInputHandling("Enter position:"); // add checks against valid employee array
-
-
-            String salaryScale = EmptyInputHandling("Enter salary scale:"); // add checks against valid salary scales from array
-
-            System.out.println("Enter current point on salary scale:");
-            int currentPoint = -1;
-            while (currentPoint < 0) { // add a max depending on valid current point scale from array
-                try {
-                    currentPoint = Integer.parseInt(in.nextLine().trim());
-                    if (currentPoint < 0) {
-                        System.out.println("Salary scale must be a positive number.");
+                String employeeID = EmptyInputHandling("Enter Employee ID");
+                String name = EmptyInputHandling("Enter Employee Name");
+                String position = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
+                System.out.println("Enter point on scale"); //check valid points against position
+                int currentPoint = -1;
+                while (currentPoint < 0) { // add a max depending on valid current point scale from array
+                    try {
+                        currentPoint = Integer.parseInt(in.nextLine().trim());
+                        if (currentPoint < 0) {
+                            System.out.println("Salary scale must be a positive number.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number.");
                     }
+                }
+                newEmployee = new Employee(employeeID,name,position,currentPoint);
+        }else if (command.equals("P")){
+            String employeeID = EmptyInputHandling("Enter Employee ID");
+            String name = EmptyInputHandling("Enter Employee Name");
+            String position = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
+            int payRate = -1;
+            while(payRate < 0 ) {
+                try {
+                    payRate = Integer.parseInt(EmptyInputHandling("Enter Employee Pay Rate"));
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a valid number.");
                 }
             }
-
-
-            //System.out.println("Is employee F)ull Time or P)art Time?");
-            //command = in.nextLine().toUpperCase().trim();
-            //boolean isFullTime = command.equals("F");
-
-            boolean isFullTime = false; // Initialize
-            while (true) {
-                System.out.println("Is the employee F)ull Time or P)art Time?");
-                command = in.nextLine().toUpperCase().trim();
-
-                if (command.equals("F")) {
-                    isFullTime = true;
-                    break; // Exit loop
-                } else if (command.equals("P")) {
-                    break; // Exit loop
-                } else {
-                    System.out.println("Invalid input. Please enter 'F' for Full Time or 'P' for Part Time.");
-                }
-            }
-
-
-            newEmployee = new Employee(employeeID, name, position, salaryScale, currentPoint, isFullTime);
-            admin.addEmployee(newEmployee);
-            admin.updateCSV();
-            System.out.println("Employee " + employeeID + " added.");
-        } catch (NumberFormatException e) {
-            System.out.println("Current point on salary scale must be a valid number.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            newEmployee = new Employee(employeeID,name,position,payRate);
         }
     }
 
@@ -179,16 +163,36 @@ public class CLI{
     private void commandH(){
         if(logIn()) {
             //implement promotion functionality
-            System.out.println("P)romote employee");
-            command = in.nextLine().toUpperCase();
-            if(command.equals("P")) {
-                System.out.println("Enter employee ID:");
-                String employeeID = in.nextLine();
-                System.out.println("Enter new position:");
-                String position = in.nextLine();
+            boolean t = false;
+            while( !t) {
+                System.out.println("P)romote employee G)ive raise ");
+                command = in.nextLine().toUpperCase();
+                if (command.equals("P")) {
+                    System.out.println("Enter employee ID:");
+                    String employeeID = in.nextLine();
+                    System.out.println("Enter new position:");
+                    String position = in.nextLine();
 
-                humanResources.promoteEmployee(employeeID, position);
+                    humanResources.promoteEmployee(employeeID, position);
+                    t = true;
+                }
+                if (command.equals("G")) {
+                    System.out.println("Enter employee ID:");
+                    String employeeID = in.nextLine();
+                    System.out.println("Enter new pay rate:");
+                    try {
+                        int payRate = Integer.parseInt(in.nextLine().trim());
+                        humanResources.employeeRaise(employeeID,payRate);
+                        t = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input for new pay rate");
+                    }
+                    // change employees pay rate
+
+                }
             }
+
+
         }
     }
 
@@ -213,7 +217,8 @@ public class CLI{
         System.out.println("User not found. Please check your Employee ID.");
         return false;
     }
-    private String EmptyInputHandling(String message) {
+
+    private String EmptyInputHandling (String message) {
         String input;
         do {
             System.out.println(message);
@@ -232,14 +237,14 @@ public class CLI{
             } else {
                 System.out.println("Submit pay claim.");
                 System.out.println("Please enter number of hours worked:");
-                hours = Integer.parseInt(in.nextLine().trim());
+                int hours = Integer.parseInt(in.nextLine().trim());
                 System.out.println(hours + " submitted.");
                 PayClaim.validateClaim(employee);
             }
 
-            }catch(NumberFormatException e){
-                System.out.println("Please enter the number of hours worked.");
-            }
+        }catch(NumberFormatException e){
+            System.out.println("Please enter the number of hours worked.");
+        }
     }
 }
 
