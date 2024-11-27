@@ -4,7 +4,6 @@ public class Employee {
     String employeeID;
     String name;
     String position;
-    String salaryScale;
     double payRate = 15.00; //same for all part time employees
     int currentPoint;
     boolean isFullTime; // Changed to instance variable
@@ -14,11 +13,10 @@ public class Employee {
 
     public Employee(){}
     // Constructor for full time
-    public Employee(String employeeID, String name, String position, String salaryScale, int currentPoint) {
+    public Employee(String employeeID, String name, String position, int currentPoint) {
         this.employeeID = employeeID;
         this.name = name;
         this.position = position;
-        this.salaryScale = salaryScale;
         this.currentPoint = currentPoint;
         this.payRate = 0.00;
     }
@@ -26,7 +24,6 @@ public class Employee {
         this.employeeID = employeeID;
         this.name = name;
         this.position = position;
-        this.salaryScale = null;
         this.currentPoint = 0;
         this.isFullTime = false;
     }
@@ -39,9 +36,6 @@ public class Employee {
     }
     public String getPosition() {
         return position;
-    }
-    public String getSalaryScale() {
-        return salaryScale;
     }
     public int getCurrentPoint() {
         return currentPoint;
@@ -58,9 +52,6 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
-    public void setSalaryScale(String salaryScale) {
-        this.salaryScale = salaryScale;
-    }
     public void setIsFullTime(boolean isFullTime) {
         this.isFullTime = isFullTime; // Set instance variable
     }
@@ -68,7 +59,7 @@ public class Employee {
         this.currentPoint = currentPoint;
     }
     public String printFullTime(){
-        if(isFullTime == true){
+        if(isFullTime){
             return "Employee is full-time";
         }else{
             return "Employee is part-time";
@@ -90,7 +81,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position + "\n" + "Salary Scale: " + salaryScale + "\n" + "Current Point: " + currentPoint + "\n" + printFullTime();
+        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position  + "\n" + "Current Point: " + currentPoint + "\n" + printFullTime();
     }
 
 
