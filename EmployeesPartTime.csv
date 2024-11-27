@@ -1,6 +1,6 @@
-﻿EmployeeID,Name,Position
-1121,Harry Styles,Library Staff
-1122,Louis Tomlinson,Security
-1123,Liam Payne,Barista
-1124,Zayn Malik,Bartender
-1125,Niall Horan,Spar Staff
+﻿EmployeeID,Name,Position,PayRate
+1121,Harry Styles,Library Staff,12.7
+1122,Louis Tomlinson,Security,13.5
+1123,Liam Payne,Barista,12.8
+1124,Zayn Malik,Bartender,12.85
+1125,Niall Horan,Spar Staff,14.7
