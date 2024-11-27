@@ -18,6 +18,7 @@ pay claim in the CLI, and their hourlyRate needs to be defined somewhere. Possib
 @version 9.11.24
  */
 public class Deductions {
+    private CLI cli;
     double salary;
     double grossMonthlyPay; //all deductions are calculated based off of monthly pay
     Employee employee; //employee whose pay is to be calculated
@@ -42,7 +43,7 @@ public class Deductions {
             grossMonthlyPay = getSalary() / 12; //assume salary is annual -> divide by 12 for monthly pay
             //issue remains with determining the employees salary, needs to come from csv i think
         }else {
-            grossMonthlyPay = CLI.hours * Employee.getPayRate();
+            grossMonthlyPay = cli.hours * employee.getPayRate();
             //employee submits their hours worked in the CLI
             // getPayRate method needs to exist in the Employee class for part-time employees, should be in constructor
         }
