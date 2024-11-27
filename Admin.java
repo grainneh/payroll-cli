@@ -50,7 +50,6 @@ public class Admin {
                     employee = new Employee(employeeID, name, position, currentPoint);
                     employees.add(employee);
                 }
-                System.out.println("CSV loaded.");
             }
 
         } catch (FileNotFoundException e) {
@@ -80,7 +79,6 @@ public class Admin {
                         employee = new Employee(employeeID, name, position, payRate);
                         employees.add(employee);
                     }
-                    System.out.println("CSV loaded.");
                 }
 
             } catch (FileNotFoundException e) {
