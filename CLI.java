@@ -17,6 +17,18 @@ public class CLI{
     private Payslip payslip;
     private Admin admin;
     private HumanResources humanResources;
+    private ArrayList<String> partTimeEmployees = {
+            "Library staff",
+            "Security",
+            "Spar staff",
+            "Barista",
+            "Bartender"
+    }
+    private ArrayList<String> fullTimeEmployees = {
+            
+    }
+    private ArrayList<int> maxPoints = {}
+        
     Employee newEmployee;
 
     /**
