@@ -21,11 +21,15 @@ public class Admin {
     Employee employee;
     String[] values;
 
-    public void LoadCSV() {
-        //String path = "employees.csv";
-        String pathFT = "EmployeesPartTime.csv"; // path for full time employees csv
-        String pathPT = "EmployeesFullTime.csv"; // path for part time employees csv
+    public void loadCSV(){
+        String pathPT = "EmployeesPartTime.csv"; // path for part-time employees csv
+        String pathFT = "EmployeesFullTime.csv"; // path for full-time employees csv
 
+        loadFullTime(pathFT);
+        loadPartTime(pathPT);
+    }
+
+    public void loadFullTime(String pathFT) {
         String line = "";
         boolean firstLine = true;
 
@@ -46,31 +50,45 @@ public class Admin {
                     employee = new Employee(employeeID, name, position, currentPoint);
                     employees.add(employee);
                 }
-
-                //loading the csv file with sample part time employees
-                BufferedReader br2 = new BufferedReader(new FileReader(pathPT)); //part time csv
-                while ((line = br1.readLine()) != null) {
-                    if (firstLine) {
-                        firstLine = false;  // Set flag to false after processing the header
-                        continue;  // Skip this iteration (header row)
-                    }
-                    values = line.split(",");
-                    if (values.length == 3) {
-                        String employeeID = values[0];
-                        String name = values[1];
-                        String position = values[2];
-                        employee = new Employee(employeeID, name, position);
-                        employees.add(employee);
-                    }
-                    System.out.println("CSV loaded.");
-                }
+                System.out.println("CSV loaded.");
             }
+
         } catch (FileNotFoundException e) {
             System.out.println("Incorrect path name used");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+        public void loadPartTime(String pathPT) {
+            String line = "";
+            boolean firstLine = true;
+
+            try {
+                //loading the csv file with sample part-time employees
+                BufferedReader br2 = new BufferedReader(new FileReader(pathPT)); //part-time csv
+                while ((line = br2.readLine()) != null) {
+                    if (firstLine) {
+                        firstLine = false;  // Set flag to false after processing the header
+                        continue;  // Skip this iteration (header row)
+                    }
+                    values = line.split(",");
+                    if (values.length == 4) {
+                        String employeeID = values[0];
+                        String name = values[1];
+                        String position = values[2];
+                        double payRate = Double.parseDouble(values[3]);
+                        employee = new Employee(employeeID, name, position, payRate);
+                        employees.add(employee);
+                    }
+                    System.out.println("CSV loaded.");
+                }
+
+            } catch (FileNotFoundException e) {
+                System.out.println("Incorrect path name used");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
     // Method to add an employee
@@ -130,7 +148,7 @@ public class Admin {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePathPT))) {
                 // Write the header row (if needed)
                 try {
-                    writer.write("EmployeeID,Name,Position");
+                    writer.write("EmployeeID,Name,Position,PayRate");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -138,7 +156,7 @@ public class Admin {
 
                 // Iterate through the list of employees and write each employee's data
                 for (Employee employee : employees) {
-                    writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition());
+                    writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "," + employee.getPayRate());
                     writer.newLine();
                 }
 
@@ -156,11 +174,11 @@ public class Admin {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write("ID , Name, Position, SalaryPoint, isFullTime ");
             writer.newLine();
-            writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "." + employee.getCurrentPoint() + ","
+            writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "," + employee.getCurrentPoint() + ","
                     + employee.getIsFullTime());// writes all the employees details in order of the parameters
             writer.newLine();
 
-            writer.write("This Epmloyees Payslips");
+            writer.write("This Employees Payslips");
             writer.newLine();
             writer.write("GrossPay, NetPay,  date");
             writer.newLine();
