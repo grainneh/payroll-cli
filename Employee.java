@@ -20,11 +20,12 @@ public class Employee {
         this.currentPoint = currentPoint;
         this.payRate = 0.00;
     }
-    public Employee(String employeeID, String name, String position) {
+    public Employee(String employeeID, String name, String position, double payRate) {
         this.employeeID = employeeID;
         this.name = name;
         this.position = position;
         this.currentPoint = 0;
+        this.payRate = payRate;
         this.isFullTime = false;
     }
     // Getter and Setter methods
@@ -72,11 +73,13 @@ public class Employee {
         this.payRate = payRate;
     }
 
-
-
     // Add payslip to an employee's payslip list
     public void addPayslip(Payslip payslip) {
         payslips.add(payslip);
+    }
+
+    public static ArrayList<Payslip> getPayslips() {
+        return payslips;
     }
 
     @Override
