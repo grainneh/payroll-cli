@@ -23,7 +23,7 @@ public class Admin {
     public Admin(){
 
     }
-    private static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
+    public static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
     Deductions deductions;
     Payslip payslip;
 
@@ -122,7 +122,7 @@ public class Admin {
         }
     }
 
-    private void CreateEmployeeCSV(Employee employee) {
+    public void CreateEmployeeCSV(Employee employee) {
         String filename = employee.getEmployeeID() + "information.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
           writer.write("ID , Name, Position, SalaryPoint, isFullTime ");
