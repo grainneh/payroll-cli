@@ -16,10 +16,10 @@ public class Admin {
     }
 
     public static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
-    Deductions deductions;
     Payslip payslip;
     Employee employee;
     String[] values;
+    Deductions deductions = new Deductions(employee);
 
     public void loadCSV(){
         String pathPT = "EmployeesPartTime.csv"; // path for part-time employees csv
@@ -123,48 +123,33 @@ public class Admin {
         String filePathFT = "EmployeesFullTime.csv";
         String filePathPT = "EmployeesPartTime.csv";
 
-        if (employee.getIsFullTime()) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePathFT))) {
-                // Write the header row (if needed)
-                try {
-                    writer.write("EmployeeID,Name,Position, CurrentPoint");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        try {
+            // Full-time employees CSV
+            BufferedWriter writerFT = new BufferedWriter(new FileWriter(filePathFT));
+            writerFT.write("EmployeeID,Name,Position,CurrentPoint");
+            writerFT.newLine();
+            for (Employee emp : employees) {
+                if (emp.getIsFullTime()) {
+                    writerFT.write(emp.getEmployeeID() + "," + emp.getName() + "," + emp.getPosition() + "," + emp.getCurrentPoint());
+                    writerFT.newLine();
                 }
-                writer.newLine();
-
-                // Iterate through the list of employees and write each employee's data
-                for (Employee employee : employees) {
-                    writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "," + employee.getCurrentPoint());
-                    writer.newLine();
-                }
-
-                System.out.println("CSV file updated successfully.");
-
-            } catch (IOException e) {
-                System.out.println("Error writing to the CSV file: " + e.getMessage());
             }
-        } else {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePathPT))) {
-                // Write the header row (if needed)
-                try {
-                    writer.write("EmployeeID,Name,Position,PayRate");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            writerFT.close();
+
+            // Part-time employees CSV
+            BufferedWriter writerPT = new BufferedWriter(new FileWriter(filePathPT));
+            writerPT.write("EmployeeID,Name,Position,PayRate");
+            writerPT.newLine();
+            for (Employee emp : employees) {
+                if (!emp.getIsFullTime()) {
+                    writerPT.write(emp.getEmployeeID() + "," + emp.getName() + "," + emp.getPosition() + "," + emp.getPayRate());
+                    writerPT.newLine();
                 }
-                writer.newLine();
-
-                // Iterate through the list of employees and write each employee's data
-                for (Employee employee : employees) {
-                    writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "," + employee.getPayRate());
-                    writer.newLine();
-                }
-
-                System.out.println("CSV file updated successfully.");
-
-            } catch (IOException e) {
-                System.out.println("Error writing to the CSV file: " + e.getMessage());
             }
+            writerPT.close();
+            System.out.println("CSV files updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing to CSV: " + e.getMessage());
         }
     }
 
