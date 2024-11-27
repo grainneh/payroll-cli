@@ -21,7 +21,7 @@ public class HumanResources {
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeID().equals(employeeID)) {
                 employees.get(i).setPosition(newPosition);// Set the new position
-
+                employees.get(i).setCurrentPoint(1);
                 System.out.println("Employee " + employeeID + " promoted to " + newPosition );
                 return; // Exit method once promotion is done
             }
