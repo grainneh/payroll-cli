@@ -15,6 +15,7 @@ import java.util.Scanner;
  */
 public class CLI {
     Employee newEmployee;
+    public int hours;
     private String command;
     private Scanner in;
     private Employee employee;
@@ -151,7 +152,7 @@ public class CLI {
     }
     public void run() {
         boolean running = true;
-        admin.LoadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
+        admin.loadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
 
         while (running) {
             System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit (Press Q at any point to quit)");
@@ -202,7 +203,7 @@ public class CLI {
             boolean payslipFound = false;
             for (Payslip slip : Employee.payslips) {
                 if (slip.getDate().equals(date)) {
-                    System.out.println(Payslip.generatePayslip(employee));
+                    System.out.println(payslip.generatePayslip(employee));
                     payslipFound = true;
                     break;
                 }
@@ -396,7 +397,7 @@ public class CLI {
             } else {
                 System.out.println("Submit pay claim.");
                 System.out.println("Please enter number of hours worked:");
-                int hours = Integer.parseInt(in.nextLine().trim());
+                hours = Integer.parseInt(in.nextLine().trim());
                 System.out.println(hours + " submitted.");
                 PayClaim.validateClaim(employee);
             }
