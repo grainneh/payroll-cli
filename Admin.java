@@ -93,7 +93,6 @@ public class Admin {
     public void addEmployee(Employee employee) {
         employees.add(employee);// Add employee to the list
         System.out.println("Employee " + employee.getName() + " added");
-        CreateEmployeeCSV(employee);// creates a employees personal csv
 
         updateCSV();
     }
@@ -152,44 +151,6 @@ public class Admin {
         } catch (IOException e) {
             System.out.println("Error writing to CSV: " + e.getMessage());
         }
-    }
-
-
-    public void CreateEmployeeCSV(Employee employee) {
-        String filename = employee.getEmployeeID() + "information.csv";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write("ID , Name, Position, SalaryPoint, isFullTime ");
-            writer.newLine();
-            writer.write(employee.getEmployeeID() + "," + employee.getName() + "," + employee.getPosition() + "," + employee.getCurrentPoint() + ","
-                    + employee.getIsFullTime());// writes all the employees details in order of the parameters
-            writer.newLine();
-
-            writer.write("This Employees Payslips");
-            writer.newLine();
-            writer.write("GrossPay, NetPay,  date");
-            writer.newLine();
-
-
-            for (Payslip payslip : employee.getPayslips()) {
-                writer.write(deductions.grossMonthlyPay + "," + deductions.netPay + "," + payslip.todaysDate);
-                writer.newLine();
-            }
-            System.out.println("CSV created for Employee: " + employee.getName());
-        } catch (IOException e) {
-            System.out.println("Error creating CSV for Employee " + employee.getName() + ": " + e.getMessage());
-        }
-    }
-
-    public void addPayslipToEmployee(String employeeID, Payslip payslip) {
-        for (Employee employee : employees) {
-            if (employee.getEmployeeID().equals(employeeID)) {
-                employee.addPayslip(payslip);
-                CreateEmployeeCSV(employee); // Update CSV with the new payslip
-                System.out.println("Payslip added for Employee: " + employee.getName());
-                return;
-            }
-        }
-        System.out.println("Employee with ID " + employeeID + " not found.");
     }
 }
 
