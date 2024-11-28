@@ -15,6 +15,7 @@ import java.util.Scanner;
  */
 public class CLI {
     Employee newEmployee;
+    public int hours;
     private String command;
     private Scanner in;
     private Employee employee;
@@ -151,7 +152,7 @@ public class CLI {
     }
     public void run() {
         boolean running = true;
-        admin.LoadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
+        admin.loadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
 
         while (running) {
             System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit (Press Q at any point to quit)");
@@ -202,7 +203,7 @@ public class CLI {
             boolean payslipFound = false;
             for (Payslip slip : Employee.payslips) {
                 if (slip.getDate().equals(date)) {
-                    System.out.println(Payslip.generatePayslip(employee));
+                    System.out.println(payslip.generatePayslip(employee));
                     payslipFound = true;
                     break;
                 }
@@ -227,6 +228,11 @@ public class CLI {
                 //remove employee
                 System.out.println("Enter Employee ID");
                 String employeeID = in.nextLine();
+                //check to see if entered employee id is 4 digits
+                if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+                    System.out.println("Please enter a 4 digit employee ID.");
+
+                }
                 admin.removeEmployee(employeeID);
                 admin.updateCSV();
             }
@@ -235,20 +241,26 @@ public class CLI {
     private boolean logIn() {
         System.out.println("Please enter employee ID to log in:");
         String employeeID = in.nextLine().trim();
-        if (employeeID.isEmpty()) {
+
+        //check to see if entered employee id is 4 digits
+        if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+            System.out.println("Invalid ID.");
+        }else if (employeeID.isEmpty()) {
             System.out.println("Employee ID cannot be empty.");
             return false;
-        }
+        }else {
 
-        for (Employee emp : Admin.getEmployees()) {
-            if (emp.getEmployeeID().equals(employeeID)) {
-                employee = emp;
-                System.out.println(emp.getName() + "(" + employeeID + ") logged in.");
-                return true;
+            for (Employee emp : Admin.getEmployees()) {
+                if (emp.getEmployeeID().equals(employeeID)) {
+                    employee = emp;
+                    System.out.println(emp.getName() + "(" + employeeID + ") logged in.");
+                    return true;
+                }
             }
+            System.out.println("User not found. Please check your Employee ID.");
         }
-        System.out.println("User not found. Please check your Employee ID.");
-        return false;
+            return false;
+
     }
     private void commandH() {
         if (logIn()) {
@@ -260,18 +272,109 @@ public class CLI {
                 if (command.equals("P")) {
                     System.out.println("Enter employee ID:");
                     String employeeID = in.nextLine();
-                    System.out.println("Enter new position:");
-                    String position = in.nextLine();
+                    //check to see if entered employee id is 4 digits
+                    if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+                        System.out.println("Please enter a 4 digit employee ID.");
+                        break;
+                    }
 
+                    // Find the employee to promote
+                    Employee employeeToPromote = null;
+                    for (Employee emp : Admin.getEmployees()) {
+                        if (emp.getEmployeeID().equals(employeeID)) {
+                            employeeToPromote = emp;
+                            break;
+                        }
+                    }
+
+                    if (employeeToPromote == null) {
+                        System.out.println("Employee not found. Please enter a valid employee ID.");
+                        break;
+                    }
+
+                    String position = null;
+                    System.out.println("I)ncrement current salary scale point    N)ew Position ");
+                    command = in.nextLine().toUpperCase();
+
+                    int i = validFullTimeEmployees.indexOf(employeeToPromote.getPosition());
+
+                    if(command.equals("I")){
+                        if(employeeToPromote.getCurrentPoint() < maxPoints.get(i)) {
+                            employeeToPromote.setCurrentPoint(employeeToPromote.getCurrentPoint() + 1);// increase current point on scale
+                            admin.updateCSV();
+                            System.out.printf("%s promoted from %d to %d on salary scale.\n", employeeToPromote.getEmployeeID(), employeeToPromote.getCurrentPoint()-1, employeeToPromote.getCurrentPoint());
+
+                            break;
+                        }else
+                        //if employee already at top of scale, ask user to input their new position
+                        System.out.printf("%s is already at the maximum point on salary scale. Please ", employee.getEmployeeID()); //string is continued in commandN
+                        command = "N";
+                    }
+                    //check if employee is full time or part time, then check if the user entered a valid position
+
+                    if(command.equals("N")){
+                    if(employeeToPromote.isFullTime){
+                        while (position == null) {
+                            String attempt = EmptyInputHandling("Enter new position"); //make sure valid position and get valid current points
+                            for (String s : validFullTimeEmployees) {
+                                if (s.equals(attempt)) {
+                                    position = attempt;
+                                    break;
+                                }
+                            }
+                            if (position == null) {
+                                System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
+                                command = in.nextLine().toUpperCase();
+                                if (command.equals("Y")) {
+                                    viewValidFullTimeEmployees();
+                                    System.out.println("Please enter a position from this list.");
+                                    position = in.nextLine();
+                                } else {
+                                    // If input is anything else, go back to the start of the loop
+                                    System.out.println("Returning to input prompt.");
+                                }
+                            }
+                        }
+                    }else {
+                        while (position == null) {
+                            String attempt = EmptyInputHandling("Enter new position"); //make sure valid position and get valid current points
+                            for (String s : validPartTimeEmployees) {
+                                if (s.equals(attempt)) {
+                                    position = attempt;
+                                    break;
+                                }
+                            }
+                            if (position == null) {
+                                System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
+                                command = in.nextLine().toUpperCase();
+                                if (command.equals("Y")) {
+                                    viewValidFullTimeEmployees();
+                                    System.out.println("Please enter a position from this list.");
+                                    position = in.nextLine();
+                                } else {
+                                    // If input is anything else, go back to the start of the loop
+                                    System.out.println("Returning to input prompt.");
+                                }
+                            }
+                        }
+                    }
+
+                    }
                     humanResources.promoteEmployee(employeeID, position);
                     t = true;
                 }
                 if (command.equals("G")) {
                     System.out.println("Enter employee ID:");
                     String employeeID = in.nextLine();
+
+                    //check to see if entered employee id is 4 digits
+                    if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+                        System.out.println("Please enter a 4 digit employee ID.");
+                    }
+
                     System.out.println("Enter new pay rate:");
                     try {
-                        int payRate = Double.parseDouble(in.nextLine().trim());
+                        double payRate = Double.parseDouble(in.nextLine().trim());
                         humanResources.employeeRaise(employeeID, payRate);
                         t = true;
                     } catch (NumberFormatException e) {
@@ -289,53 +392,73 @@ public class CLI {
         System.out.println("F)ull time or P)art time");
         command = in.nextLine().toUpperCase();
         if (command.equals("F")) {
-            String employeeID = EmptyInputHandling("Enter Employee ID");
-            String name = EmptyInputHandling("Enter Employee Name");
-            String position = null;
-            while (position == null) {
-                String attempt = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
-                for (String s : validFullTimeEmployees) {
-                    if (s.equals(attempt)) {
-                        position = attempt;
+
+                String employeeID = EmptyInputHandling("Enter Employee ID");
+                //check to see if entered employee id is 4 digits
+                if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
+                    System.out.println("Please enter a 4 digit employee ID.");
+                }
+                for (int i = 0; i < admin.employees.size(); i++) {
+                    if (admin.employees.get(i).getEmployeeID().equals(employee.getEmployeeID())) {
+                        System.out.println("Employee already exists. Please enter a valid employee ID.");
+                        employeeID = EmptyInputHandling("Enter Employee ID");
                         break;
                     }
                 }
-                if (position == null) {
-                    System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
-                    command = in.nextLine().toUpperCase();
-                    if (command.equals("Y")) {
-                        viewValidFullTimeEmployees();
-                    } else {
-                        // If input is anything else, go back to the start of the loop
-                        System.out.println("Returning to input prompt.");
-                    }
-                }
-            }
-            // get array element from position entered
-            int i = validFullTimeEmployees.indexOf(position);
-            //set max currentPoint to element from points array
-            int maxPoint = maxPoints.get(i);
-            System.out.printf("Enter point on scale between 1 and %d for %s", maxPoint, position); //check valid points against position
-            int currentPoint = -1;
-            while (currentPoint < 0 || currentPoint > maxPoint) { // add a max depending on valid current point scale from array
-                try {
-                    currentPoint = Integer.parseInt(in.nextLine().trim());
-                    if (currentPoint < 0) {
-                        System.out.println("Salary scale must be a positive number.");
-                    }
-                    if (currentPoint > maxPoint) {
-                        System.out.println("Salary scale must be within the valid range");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a valid number.");
-                }
-            }
 
-            newEmployee = new Employee(employeeID, name, position, currentPoint);
-            admin.addEmployee(newEmployee);
+                String name = EmptyInputHandling("Enter Employee Name");
+                String position = null;
+                while (position == null) {
+                    String attempt = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
+                    for (String s : validFullTimeEmployees) {
+                        if (s.equals(attempt)) {
+                            position = attempt;
+                            break;
+                        }
+                    }
+                    if (position == null) {
+                        System.out.println("Invalid position. Would you like to see a list of valid Employees? Y/N");
+                        command = in.nextLine().toUpperCase();
+                        if (command.equals("Y")) {
+                            viewValidFullTimeEmployees();
+                            System.out.println("Please enter a position from this list.");
+                        } else {
+                            // If input is anything else, go back to the start of the loop
+                            System.out.println("Returning to input prompt.");
+                        }
+                    }
+                }
+
+                // get array element from position entered
+                int i = validFullTimeEmployees.indexOf(position);
+                //set max currentPoint to element from points array
+                int maxPoint = maxPoints.get(i);
+                System.out.printf("Enter point on scale between 1 and %d for %s", maxPoint, position); //check valid points against position
+                int currentPoint = -1;
+                while (currentPoint < 0 || currentPoint > maxPoint) { // add a max depending on valid current point scale from array
+                    try {
+                        currentPoint = Integer.parseInt(in.nextLine().trim());
+                        if (currentPoint < 0) {
+                            System.out.println("Salary scale must be a positive number. Please re-enter.");
+                        }
+                        if (currentPoint > maxPoint) {
+                            System.out.println("Salary scale must be within the valid range. Please re-enter.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number.");
+                    }
+                }
+
+                newEmployee = new Employee(employeeID, name, position, currentPoint);
+                admin.addEmployee(newEmployee);
+
         }
         if (command.equals("P")) {
             String employeeID = EmptyInputHandling("Enter Employee ID");
+            //check to see if entered employee id is 4 digits
+            if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+                System.out.println("Please enter a 4 digit employee ID.");
+            }
             String name = EmptyInputHandling("Enter Employee Name");
             String position = null;
             while (position == null) {
@@ -396,7 +519,7 @@ public class CLI {
             } else {
                 System.out.println("Submit pay claim.");
                 System.out.println("Please enter number of hours worked:");
-                int hours = Integer.parseInt(in.nextLine().trim());
+                hours = Integer.parseInt(in.nextLine().trim());
                 System.out.println(hours + " submitted.");
                 PayClaim.validateClaim(employee);
             }
