@@ -179,7 +179,7 @@ public class CLI {
                 if (command.equals("G")) {
                     System.out.println("Enter employee ID:");
                     if(employee.getIsFullTime()){
-                        System.out.println("Employee is full time:");
+                        System.out.println("Employee is full time:");//cant give raise
                     }else{
                         System.out.println("Employee is part time:");
                     }
@@ -189,8 +189,7 @@ public class CLI {
                     try {
                         int payRate = Integer.parseInt(in.nextLine().trim());
                         if(employee.getIsFullTime()) {
-                            humanResources.employeeRaise(employeeID, payRate);
-                            System.out.println("Full Time Employee raised successfully.");
+                            System.out.println("Full Time Employee cannot be raised.");
                         }else{
                             humanResources.employeeRaise(employeeID, payRate);
                             System.out.println("Part Time Employee raised successfully.");
