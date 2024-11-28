@@ -34,10 +34,10 @@ public class Payslip  {
         this.employee = employee; //this is the employee referenced throughout the class
     }
 
-    public Payslip(String employeeID, String name, String position, double grossPay, double prsi,
-                   double usc, double incomeTax, double healthInsurance, double unionContribution, double netPay) {
+    public Payslip(String employeeID, String name, String position, double GrossMonthlyPay, double prsi,
+                   double usc, double incomeTax, double healthInsurance, double unionContribution, double netPay,LocalDate date) {
     }
-   
+
 
     public Payslip() {
     }
@@ -51,6 +51,7 @@ public class Payslip  {
         if (payDay == 25) { //if it is the 25th of the month generate a payslip
             Deductions deductions = new Deductions(employee); //calculate the deductions for the employee in question
             Payslip payslip = new Payslip(
+                    
                     employee.getEmployeeID(),
                     employee.getName(),
                     employee.getPosition(),
@@ -60,7 +61,8 @@ public class Payslip  {
                     deductions.incomeTax(),
                     HealthInsurance, // Health Insurance constant
                     UnionContribution,  // Union Contribution constant
-                    deductions.netPay()
+                    deductions.netPay(),
+                    todaysDate
             );
 
 
@@ -73,7 +75,7 @@ public class Payslip  {
                 BufferedWriter PayslipWriter = new BufferedWriter(new FileWriter(path));
 
                 PayslipWriter.write(
-                        employee.getEmployeeID() + "," +
+                            employee.getEmployeeID() + "," +
                                 employee.getName() + "," +
                                 employee.getPosition() + "," +
                                 deductions.grossMonthlyPay() + "," +
@@ -82,7 +84,9 @@ public class Payslip  {
                                 deductions.incomeTax() + "," +
                                 HealthInsurance + "," +
                                 UnionContribution + "," +
-                                deductions.netPay()
+                                deductions.netPay() +","+
+                                    todaysDate
+
                 );
                 System.out.println("CSV Updated");
                 employee.payslips.add(payslip);
@@ -115,12 +119,12 @@ public class Payslip  {
 
                 while ((line = PayslipReader.readLine()) != null) {
                     if (firstLine) {
-                        firstLine = false;  // Set flag to false after processing the header
-                        continue;  // Skip this iteration (header row)
+                        firstLine = false;  
+                        continue;   
                     }
                     String[] values = line.split(",");
 
-                    if (values.length == 10) {
+                    if (values.length == 11) {
                         String employeeID = values[0];
                         String name = values[1];
                         String position = values[2];
@@ -131,6 +135,7 @@ public class Payslip  {
                         double HealthInsurance = Double.parseDouble(values[7]);
                         double UnionContribution = Double.parseDouble(values[8]);
                         double netPay = Double.parseDouble(values[9]);
+                        LocalDate date = LocalDate.parse(values[10]);
 
 
 
@@ -148,4 +153,4 @@ public class Payslip  {
         }
 
 
-    
+
