@@ -227,40 +227,53 @@ public class CLI {
             } else if (command.equals("R")) {
                 //remove employee
                 System.out.println("Enter Employee ID");
-                String employeeID = in.nextLine();
-                //check to see if entered employee id is 4 digits
-                if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
-                    System.out.println("Please enter a 4 digit employee ID.");
+               try {
+                   String employeeID = in.nextLine();
 
-                }
-                admin.removeEmployee(employeeID);
+                   //check to see if entered employee id is 4 digits
+                   if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
+                       System.out.println("Please enter a 4 digit employee ID.");
+
+                   }
+                   admin.removeEmployee(employeeID);
+               }catch(NumberFormatException e){
+                   System.out.println("Please enter a 4 digit employee ID.");
+               }
                 admin.updateCSV();
             }
         }
     }
     private boolean logIn() {
         System.out.println("Please enter employee ID to log in:");
-        String employeeID = in.nextLine().trim();
+        try {
+            String employeeID = in.nextLine().trim();
+            try {
+                //check to see if entered employee id is 4 digits
+                if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
+                    System.out.println("Invalid ID.");
+                } else if (employeeID.isEmpty()) {
+                    System.out.println("Employee ID cannot be empty.");
+                    return false;
+                } else {
 
-        //check to see if entered employee id is 4 digits
-        if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
-            System.out.println("Invalid ID.");
-        }else if (employeeID.isEmpty()) {
-            System.out.println("Employee ID cannot be empty.");
-            return false;
-        }else {
-
-            for (Employee emp : Admin.getEmployees()) {
-                if (emp.getEmployeeID().equals(employeeID)) {
-                    employee = emp;
-                    System.out.println(emp.getName() + "(" + employeeID + ") logged in.");
-                    return true;
+                    for (Employee emp : Admin.getEmployees()) {
+                        if (emp.getEmployeeID().equals(employeeID)) {
+                            employee = emp;
+                            System.out.println(emp.getName() + "(" + employeeID + ") logged in.");
+                            return true;
+                        }
+                    }
+                    System.out.println("User not found. Please check your Employee ID.");
                 }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a 4 digit employee ID.");
             }
-            System.out.println("User not found. Please check your Employee ID.");
-        }
-            return false;
 
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+        }
+        return false;
     }
     private void commandH() {
         if (logIn()) {
@@ -271,12 +284,15 @@ public class CLI {
                 command = in.nextLine().toUpperCase();
                 if (command.equals("P")) {
                     System.out.println("Enter employee ID:");
-                    String employeeID = in.nextLine();
-                    //check to see if entered employee id is 4 digits
-                    if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
-                        System.out.println("Please enter a 4 digit employee ID.");
-                        break;
-                    }
+                    try {
+                        String employeeID = in.nextLine();
+
+                        //check to see if entered employee id is 4 digits
+                        if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
+                            System.out.println("Please enter a 4 digit employee ID.");
+                            break;
+                        }
+
 
                     // Find the employee to promote
                     Employee employeeToPromote = null;
@@ -362,15 +378,25 @@ public class CLI {
                     }
                     humanResources.promoteEmployee(employeeID, position);
                     t = true;
+                    }catch(NumberFormatException e){
+                        System.out.println("Please enter a 4 digit employee ID.");
+                    }
                 }
                 if (command.equals("G")) {
                     System.out.println("Enter employee ID:");
-                    String employeeID = in.nextLine();
 
-                    //check to see if entered employee id is 4 digits
-                    if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
+                        String employeeID = in.nextLine();
                         System.out.println("Please enter a 4 digit employee ID.");
-                    }
+
+                        try {
+                            //check to see if entered employee id is 4 digits
+                            if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
+                                System.out.println("Please enter a 4 digit employee ID.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a 4 digit employee ID.");
+                        }
+
 
                     // Find the employee to promote
                     Employee employeeToRaise = null;
@@ -403,8 +429,8 @@ public class CLI {
                 }
             }
 
-
         }
+
     }
     private void commandAa() {
         System.out.println("F)ull time or P)art time");
