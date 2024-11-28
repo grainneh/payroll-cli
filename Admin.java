@@ -94,6 +94,8 @@ public class Admin {
         employees.add(employee);// Add employee to the list
         System.out.println("Employee " + employee.getName() + " added");
         CreateEmployeeCSV(employee);// creates a employees personal csv
+
+        updateCSV();
     }
 
     // Method to remove an employee by their employee ID
@@ -107,6 +109,7 @@ public class Admin {
                 return;
             }
         }
+        updateCSV();
     }
 
     public static ArrayList<Employee> getEmployees() {
