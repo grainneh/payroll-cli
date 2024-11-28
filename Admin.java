@@ -11,6 +11,7 @@ the add/remove worked correctly.
 
 import java.io.*;
 import java.util.ArrayList;
+import java.time.*;
 public class Admin {
     public Admin() {
     }
@@ -20,6 +21,7 @@ public class Admin {
     Employee employee;
     String[] values;
     Deductions deductions = new Deductions(employee);
+    boolean octoberCheck = false;
 
     public void loadCSV(){
         String pathPT = "EmployeesPartTime.csv"; // path for part-time employees csv
@@ -58,35 +60,35 @@ public class Admin {
             e.printStackTrace();
         }
     }
-        public void loadPartTime(String pathPT) {
-            String line = "";
-            boolean firstLine = true;
+    public void loadPartTime(String pathPT) {
+        String line = "";
+        boolean firstLine = true;
 
-            try {
-                //loading the csv file with sample part-time employees
-                BufferedReader br2 = new BufferedReader(new FileReader(pathPT)); //part-time csv
-                while ((line = br2.readLine()) != null) {
-                    if (firstLine) {
-                        firstLine = false;  // Set flag to false after processing the header
-                        continue;  // Skip this iteration (header row)
-                    }
-                    values = line.split(",");
-                    if (values.length == 4) {
-                        String employeeID = values[0];
-                        String name = values[1];
-                        String position = values[2];
-                        double payRate = Double.parseDouble(values[3]);
-                        employee = new Employee(employeeID, name, position, payRate);
-                        employees.add(employee);
-                    }
+        try {
+            //loading the csv file with sample part-time employees
+            BufferedReader br2 = new BufferedReader(new FileReader(pathPT)); //part-time csv
+            while ((line = br2.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;  // Set flag to false after processing the header
+                    continue;  // Skip this iteration (header row)
                 }
-
-            } catch (FileNotFoundException e) {
-                System.out.println("Incorrect path name used");
-            } catch (IOException e) {
-                e.printStackTrace();
+                values = line.split(",");
+                if (values.length == 4) {
+                    String employeeID = values[0];
+                    String name = values[1];
+                    String position = values[2];
+                    double payRate = Double.parseDouble(values[3]);
+                    employee = new Employee(employeeID, name, position, payRate);
+                    employees.add(employee);
+                }
             }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Incorrect path name used");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
 
     // Method to add an employee
@@ -129,9 +131,14 @@ public class Admin {
             writerFT.write("EmployeeID,Name,Position,CurrentPoint");
             writerFT.newLine();
             for (Employee emp : employees) {
-                if (emp.getIsFullTime()) {
+                if (emp.getIsFullTime() && (LocalDate.now().getMonthValue() != 10 || octoberCheck)) {
                     writerFT.write(emp.getEmployeeID() + "," + emp.getName() + "," + emp.getPosition() + "," + emp.getCurrentPoint());
                     writerFT.newLine();
+                }
+                if (emp.getIsFullTime() && LocalDate.now().getMonthValue() == 10 && !octoberCheck) {
+                    writerFT.write(emp.getEmployeeID() + "," + emp.getName() + "," + emp.getPosition() + "," + (emp.getCurrentPoint()+1));
+                    writerFT.newLine();
+                    octoberCheck = true;
                 }
             }
             writerFT.close();
@@ -153,7 +160,6 @@ public class Admin {
         }
     }
 }
-
 
 
 
