@@ -179,7 +179,7 @@ public class CLI {
                 if (command.equals("G")) {
                     System.out.println("Enter employee ID:");
                     if(employee.getIsFullTime()){
-                        System.out.println("Employee is full time:");//cant give raise
+                        System.out.println("Employee is full time:");
                     }else{
                         System.out.println("Employee is part time:");
                     }
