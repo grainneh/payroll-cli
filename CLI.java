@@ -366,12 +366,27 @@ public class CLI {
                 if (command.equals("G")) {
                     System.out.println("Enter employee ID:");
                     String employeeID = in.nextLine();
-                
+
                     //check to see if entered employee id is 4 digits
                     if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
                         System.out.println("Please enter a 4 digit employee ID.");
                     }
-                    if (employee.getIsFullTime()){
+
+                    // Find the employee to promote
+                    Employee employeeToRaise = null;
+                    for (Employee emp : Admin.getEmployees()) {
+                        if (emp.getEmployeeID().equals(employeeID)) {
+                            employeeToRaise = emp;
+                            break;
+                        }
+                    }
+
+                    if (employeeToRaise == null) {
+                        System.out.println("Employee not found. Please enter a valid employee ID.");
+                        break;
+                    }
+
+                    if (employeeToRaise.getIsFullTime()){
                         System.out.println("Employee is full-time. Cannot give raise.");
                     }else {
                         System.out.println("Enter new pay rate:");
