@@ -1,23 +1,30 @@
+/**
+ * Attributes:
+ *     Employee e
+ * Methods:
+ *     void validateClaim()
+ *     LocalDate getSecondFriday()
+ *
+ * Part-time employees need to submit a pay-claim form by the second friday of the month in order to get paid that month.
+ * This class checks to see if the employee has submitted a pay-claim before the second friday of the month. If the
+ * employee has submitted their pay-claim on time they will get paid that month, otherwise they won't get paid.
+ *
+ * @author Liam Finn
+ * @date 29.11.2024
+ */
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.YearMonth;
 
-/*
-
-    * getSecondFriday() class completed
-    * ableToClaim and payClaimed can be introduced as fields in Employees class, and can
-    be replaced by getAbleToClaim(Employee e) once introduced
-    * "pay employee" can be replaced with a call of the Payslip class once completed
-    * printlns can be seen in the CLI
-
-
-
-@author Liam Finn
-@date 7.11.2024
- */
 public class PayClaim {
+    Employee e = new Employee(); //creates an employee object]
 
-    Employee e = new Employee();
+    /**
+     * The method validateClaim() checks to see if the employee has submitted their pay-claim by the second friday of
+     * the month
+     *
+     * @param e     the employee in question
+     */
     public static void validateClaim(Employee e) {
         LocalDate today = LocalDate.now(); //day employee submits claim
 
@@ -29,19 +36,25 @@ public class PayClaim {
             if(e.payClaimed){ //pay already claimed this month
                 System.out.println("Pay already claimed");
             } if (!e.payClaimed && today.isBefore(secondFriday)){
-               Payslip payslip = new Payslip(e);
-                Payslip.generatePayslip(e);
+                Payslip payslip = new Payslip(e);
+                payslip.generatePayslip(e);
                 e.ableToClaim = false;
                 e.payClaimed = true;
             } else {
-                System.out.println("Pay not claimed before 2nd Friday. Unable to claim pay this month");
+                System.out.println("Pay not claimed before 2nd Friday. Unable to claim pay this month.");
                 e.ableToClaim = false;
             }
         } else{
-            System.out.println("Unable to claim pay");
+            System.out.println("Unable to claim pay.");
         }
     }
 
+    /**
+     * The method getSecondFriday() determines the date of the second friday of a particular month
+     *
+     * @param yearMonth     year and month
+     * @return the second friday of the particular month
+     */
     public static LocalDate getSecondFriday(YearMonth yearMonth) {
         // Get the first day of this month
         LocalDate firstDayOfMonth = yearMonth.atDay(1);
