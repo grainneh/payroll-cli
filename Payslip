@@ -1,16 +1,7 @@
-
-/*
-Payslip Class
-
-Made major changes to the payslip class
-Moved the calculation of the employee's pay to a separate method called Deductions to keep the code tidy
-The Payslip class includes a constructor that accepts an employee as a parameter
-The generatePayslip() method generates a (String) payslip for the employee, taking values from the Deductions class
-    It checks if it is the 25th of the month. If yes, generates payslip. If not, returns a String informing user that
-    it is not the 25th of the month
-
-@author Gráinne Hartigan
-@date 9.11.2024
+/**
+ * The Payslip class generates a payslip for an employee and writes it to a csv file
+ *
+ * @authors Gráinne Hartigan, Michał Czekalski
  */
 
 import java.io.*;
@@ -22,11 +13,14 @@ public class Payslip  {
     String employeeID; //employee ID
     LocalDate todaysDate; //today's date
     int payDay;//employees need to be paid on the 25th of each month
-    double HealthInsurance = 143.94;
-    double UnionContribution = 12.35;
+    double HealthInsurance = 143.94; //assumes all employees are with Aviva
+    double UnionContribution = 12.35; //assumes all employees are Unite union members
 
-
-    public Payslip(Employee employee) { //issue remains with determining the employees salary, needs to come from csv i think
+    /**
+     * Constructor
+     * @param employee
+     */
+    public Payslip(Employee employee) {
         name = employee.getName();
         employeeID = employee.getEmployeeID();
         todaysDate = LocalDate.now(); //should be the 25th, so we implement a check
@@ -34,13 +28,28 @@ public class Payslip  {
         this.employee = employee; //this is the employee referenced throughout the class
     }
 
+    /**
+     * Full parameter constructor
+     * @param employeeID
+     * @param name
+     * @param position
+     * @param GrossMonthlyPay
+     * @param prsi
+     * @param usc
+     * @param incomeTax
+     * @param healthInsurance
+     * @param unionContribution
+     * @param netPay
+     * @param date
+     */
     public Payslip(String employeeID, String name, String position, double GrossMonthlyPay, double prsi,
                    double usc, double incomeTax, double healthInsurance, double unionContribution, double netPay,LocalDate date) {
     }
 
-
-    public Payslip() {
-    }
+    /**
+     * Null constructor
+     */
+    public Payslip() {}
 
     /**
      * The method generatePayslip() generates a payslip if it is the 25th of the month
@@ -75,7 +84,7 @@ public class Payslip  {
                 BufferedWriter PayslipWriter = new BufferedWriter(new FileWriter(path));
 
                 PayslipWriter.write(
-                            employee.getEmployeeID() + "," +
+                        employee.getEmployeeID() + "," +
                                 employee.getName() + "," +
                                 employee.getPosition() + "," +
                                 deductions.grossMonthlyPay() + "," +
@@ -85,7 +94,7 @@ public class Payslip  {
                                 HealthInsurance + "," +
                                 UnionContribution + "," +
                                 deductions.netPay() +","+
-                                    todaysDate
+                                todaysDate
 
                 );
                 System.out.println("CSV Updated");
@@ -104,52 +113,58 @@ public class Payslip  {
     }
 
 
-        public LocalDate getDate () {
-            return todaysDate;
-        }
+    /**
+     * Getter method
+     * @return todaysDate
+     */
+    public LocalDate getDate () {
+        return todaysDate;
+    }
 
-        public  void LoadPCSV(){
-            String path = "Payslip.csv";
+    /**
+     * The method LoadPCSV() loads the csv file that contains employee payslips
+     */
+    public void LoadPCSV(){
+        String path = "Payslip.csv";
 
-            String line = "";
-            boolean firstLine =true;
+        String line = "";
+        boolean firstLine =true;
 
-            try {
-                BufferedReader PayslipReader = new BufferedReader(new FileReader(path));
+        try {
+            BufferedReader PayslipReader = new BufferedReader(new FileReader(path));
 
-                while ((line = PayslipReader.readLine()) != null) {
-                    if (firstLine) {
-                        firstLine = false;
-                        continue;
-                    }
-                    String[] values = line.split(",");
-
-                    if (values.length == 11) {
-                        String employeeID = values[0];
-                        String name = values[1];
-                        String position = values[2];
-                        double GrossPay = Double.parseDouble(values[3]);
-                        double PRSI = Double.parseDouble(values[4]);
-                        double USC = Double.parseDouble(values[5]);
-                        double IncomeTax = Double.parseDouble(values[6]);
-                        double HealthInsurance = Double.parseDouble(values[7]);
-                        double UnionContribution = Double.parseDouble(values[8]);
-                        double netPay = Double.parseDouble(values[9]);
-                        LocalDate date = LocalDate.parse(values[10]);
-
-
-
-                    }
-
-
+            while ((line = PayslipReader.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
                 }
-                System.out.println("PCSV Loaded");
-            } catch (FileNotFoundException e) {
-                System.out.println("Incorrect path name used");
-            } catch (IOException e) {
-                e.printStackTrace();
+                String[] values = line.split(",");
+
+                if (values.length == 11) {
+                    String employeeID = values[0];
+                    String name = values[1];
+                    String position = values[2];
+                    double GrossPay = Double.parseDouble(values[3]);
+                    double PRSI = Double.parseDouble(values[4]);
+                    double USC = Double.parseDouble(values[5]);
+                    double IncomeTax = Double.parseDouble(values[6]);
+                    double HealthInsurance = Double.parseDouble(values[7]);
+                    double UnionContribution = Double.parseDouble(values[8]);
+                    double netPay = Double.parseDouble(values[9]);
+                    LocalDate date = LocalDate.parse(values[10]);
+                }
             }
+            System.out.println("PCSV Loaded");
+        } catch (FileNotFoundException e) {
+            System.out.println("Incorrect path name used");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * The method updatePCSV() writes to the csv file of employee payslips
+     */
     public void updatePCSV () {
         Deductions deductions = new Deductions(employee);
         String filePath = "Payslip.csv";
@@ -179,7 +194,7 @@ public class Payslip  {
                                     todaysDate + "\n"
                     );
                 }
-                
+
             }
 
             System.out.println("CSV file updated successfully.");
@@ -188,4 +203,4 @@ public class Payslip  {
             System.out.println("Error writing to the CSV file: " + e.getMessage());
         }
     }
-        }
+}
