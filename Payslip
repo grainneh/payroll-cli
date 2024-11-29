@@ -51,7 +51,7 @@ public class Payslip  {
         if (payDay == 25) { //if it is the 25th of the month generate a payslip
             Deductions deductions = new Deductions(employee); //calculate the deductions for the employee in question
             Payslip payslip = new Payslip(
-                    
+
                     employee.getEmployeeID(),
                     employee.getName(),
                     employee.getPosition(),
@@ -119,8 +119,8 @@ public class Payslip  {
 
                 while ((line = PayslipReader.readLine()) != null) {
                     if (firstLine) {
-                        firstLine = false;  
-                        continue;   
+                        firstLine = false;
+                        continue;
                     }
                     String[] values = line.split(",");
 
@@ -150,7 +150,42 @@ public class Payslip  {
                 e.printStackTrace();
             }
         }
+    public void updatePCSV () {
+        Deductions deductions = new Deductions(employee);
+        String filePath = "Payslip.csv";
+        try (BufferedWriter Payslipwriter= new BufferedWriter(new FileWriter(filePath))) {
+            // Write the header row (if needed)
+            try {
+                Payslipwriter.write("ID, Name, Position, GrossMonthlyPay, PRSI, USC, IncomeTax,Health Isurance,Union Contribution,Net Pay, Date");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Payslipwriter.newLine();
+
+            // Iterate through the list of employees and write each employee's data
+            for (Employee employee : Admin.employees){
+                for (Payslip payslip: employee.payslips){
+                    Payslipwriter.write(
+                            employee.getEmployeeID() + "," +
+                                    employee.getName() + "," +
+                                    employee.getPosition() + "," +
+                                    deductions.grossMonthlyPay() + "," +
+                                    deductions.PRSI() + "," +
+                                    deductions.USC() + "," +
+                                    deductions.incomeTax() + "," +
+                                    HealthInsurance + "," +
+                                    UnionContribution + "," +
+                                    deductions.netPay() + "," +
+                                    todaysDate + "\n"
+                    );
+                }
+                
+            }
+
+            System.out.println("CSV file updated successfully.");
+
+        } catch (IOException e) {
+            System.out.println("Error writing to the CSV file: " + e.getMessage());
         }
-
-
-
+    }
+        }
