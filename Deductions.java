@@ -2,7 +2,7 @@
  * The class Deductions calculates the various deductions from an employees gross pay. These include health insurance,
  * union contributions, PRSI, USC and income tax.
  *
- * @authors Gráinne Hartigan, Michał Czekalski
+ * @authors Gráinne Hartigan
  * @version 29/11/2024
  * */
 
