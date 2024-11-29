@@ -224,10 +224,11 @@ public class CLI {
         if (logIn()) {
             System.out.println("Please enter password");
             String password = in.nextLine().trim();
-            if (password == adminpassword) {
+            if (password.equals(adminpassword)) {
                 System.out.println("Password entered successfully.");
             }else{
                 System.out.println("Invalid password. Please try again.");
+                password = in.nextLine().trim();
             }
             //admin can add or remove an employee
             System.out.println("A)dd employee     R)emove employee");
@@ -289,10 +290,11 @@ public class CLI {
         if (logIn()) {
             System.out.println("Please enter password");
             String password = in.nextLine().trim();
-            if (password == hrpassword) {
+            if (password.equals(hrpassword)) {
                 System.out.println("Password entered successfully.");
             }else{
                 System.out.println("Invalid password. Please try again.");
+                password = in.nextLine().trim();
             }
             //implement promotion functionality
             boolean t = false;
