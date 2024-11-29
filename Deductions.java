@@ -1,9 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-
 /*
 New class deduction to calculate pay deductions, allowing Payslip to simply generate a payslip without extraneous methods
 The class deductions determines the salary by checking if the employee is full/part time (using method from Employee)
@@ -18,14 +12,9 @@ pay claim in the CLI, and their hourlyRate needs to be defined somewhere. Possib
 @version 9.11.24
  */
 public class Deductions {
-    private CLI cli;
-    double salary;
     double grossMonthlyPay; //all deductions are calculated based off of monthly pay
     Employee employee; //employee whose pay is to be calculated
     double netPay;
-    ArrayList<String> columnPositions = new ArrayList<> ();
-    ArrayList<Integer> columnPoints = new ArrayList<>();
-    ArrayList<Double> columnSalaries = new ArrayList<>();
 
 
     public Deductions(Employee employee){
@@ -34,21 +23,21 @@ public class Deductions {
 
     /**
      * The method grossMonthlyPay() checks if an employee is full time or part time.
-     * Full time employees are salaried, part-time employees are paid an hourly rate
+     * Full time employees are salaried, part time employees are paid an hourly rate
      *
      * @return grossMonthlyPay  the employee's gross monthly pay
      */
-    public void calculateGrossMonthlyPay() {
+    public double calculateGrossMonthlyPay() {
         if (employee.getIsFullTime()) {
-            grossMonthlyPay = getSalary() / 12; //assume salary is annual -> divide by 12 for monthly pay
+            grossMonthlyPay = 120000  /12; //assume salary is annual -> divide by 12 for monthly pay
             //issue remains with determining the employees salary, needs to come from csv i think
-        }else {
-            grossMonthlyPay = cli.hours * employee.getPayRate();
-            //employee submits their hours worked in the CLI
-            // getPayRate method needs to exist in the Employee class for part-time employees, should be in constructor
+        } else {
+            grossMonthlyPay = 35 * 12.70;
+            //employee submits their hours worked in the CLI, their hourly rate should be included in employee class
         }
-
+        return grossMonthlyPay;
     }
+
     /**
      * The method grossMonthlyPay() returns the gross monthly pay calculated in calculateGrossMonthlyPay() to avoid
      * having to call this method and calculate the gross monthly pay every time it is needed
@@ -56,7 +45,7 @@ public class Deductions {
      * @return  the gross monthly pay
      */
     public double grossMonthlyPay(){
-        return grossMonthlyPay;
+        return calculateGrossMonthlyPay();
     }
 
 
@@ -74,14 +63,23 @@ public class Deductions {
      */
     public double PRSI(){
         double PRSI;
-        double weeklyEarnings = grossMonthlyPay()/4; //PRSI is based off of weekly pay, so we must multiply by 4 at the end
-        if(weeklyEarnings > 352.01){
-            double PRSICredit = 12 - (weeklyEarnings / 6);
-            double weeklyPRSI = weeklyEarnings * (.041);
-            PRSI = weeklyPRSI - PRSICredit;
-            PRSI *= 4; //ensures we stick with monthly pay
-        }else PRSI = 0;
-        return PRSI;
+        double credit = 12;
+        double weeklyEarnings = grossMonthlyPay()/4;//PRSI is based off of weekly pay, so we must multiply by 4 at the end
+
+        if (weeklyEarnings < 352){
+            return 0.0;
+        } else if (weeklyEarnings ==352.01){
+            PRSI =  (weeklyEarnings * 0.041)- credit;
+        } else if (weeklyEarnings <= 424) {
+            double AfterCutOff = weeklyEarnings - 352.01;
+            double sixthOfEarnings=AfterCutOff/6;
+            double taxCredit = Math.max(0,12 - sixthOfEarnings);//make sure we dont get negatives @Grainne
+            PRSI = (weeklyEarnings * 0.041)- taxCredit;
+        }
+        else{
+            PRSI = weeklyEarnings*0.041;
+        }
+        return(PRSI*52)/12;//return back to monthly values
     }
 
     /**
@@ -143,49 +141,6 @@ public class Deductions {
         double unionFees = 12.35; //assume all employees are union members (figure from Unite.ie)
         double healthInsuranceFees = 143.94;//assume all employees are VHI members (figure from VHI.ie)
         return netPay = grossMonthlyPay() - PRSI() - USC() - incomeTax() - unionFees - healthInsuranceFees;
-    }
-
-    public  void LoadCSV() {
-        String path =  "Salary.csv";
-
-
-        String line = "";
-        boolean firstLine =true;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            while ((line = br.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;  // Set flag to false after processing the header
-                    continue;  // Skip this iteration (header row)
-                }
-                String[] columns = line.split(",");
-                if (columns.length == 3) {
-                    String position = columns[0];
-                    int currentPoint = Integer.parseInt(columns[1]);
-                    double salary = Double.parseDouble(columns[2]);
-                    columnPositions.add(position);
-                    columnPoints.add(currentPoint);
-                    columnSalaries.add(salary);
-
-                }
-            }
-            System.out.println("CSV Loaded");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public double getSalary() {
-        String employeePosition = employee.getPosition();
-        int employeeCurrentPoint = employee.getCurrentPoint();
-        for(int i = 0; i < columnPositions.size(); i++){
-            if(employeePosition == columnPositions.get(i) && employeeCurrentPoint == columnPoints.get(i)){
-                return columnSalaries.get(i);
-            }
-        }
-        return salary;
     }
 
 }
