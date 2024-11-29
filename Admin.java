@@ -1,28 +1,31 @@
-/*
-This class uses two methods:one to remove and one to add employees to the employees array.
-addEmployee simply uses .add() to add an employee to the array. RemoveEmployee uses a for loop to
-go through the array and find an ID that matches the given ID. It also has a getEmployees method so you can make sure
-the add/remove worked correctly.
-
-@author Michal Czekalski
+/**
+ * The Admin class can add and remove employees to the employees arrayList.
+ *
+ * @author Michał Czekalski, Gráinne Hartigan
  */
-
 
 
 import java.io.*;
 import java.util.ArrayList;
 import java.time.*;
 public class Admin {
+    public static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
+    Payslip payslip; //instance of payslip class
+    Employee employee; //instance of employee class
+    String[] values; //string array used for reading csv values
+    Deductions deductions = new Deductions(employee); //instance of deductions class
+    boolean octoberCheck = false; //boolean used to check month
+
+    /**
+     * Null constructor
+     */
     public Admin() {
     }
 
-    public static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
-    Payslip payslip;
-    Employee employee;
-    String[] values;
-    Deductions deductions = new Deductions(employee);
-    boolean octoberCheck = false;
-
+    /**
+     * The method loadCSV calls the methods loadFullTime() and loadPartTime() in order to load the csv files containing
+     * information about the full-time and part-time employees respectively.
+     */
     public void loadCSV(){
         String pathPT = "EmployeesPartTime.csv"; // path for part-time employees csv
         String pathFT = "EmployeesFullTime.csv"; // path for full-time employees csv
@@ -31,6 +34,10 @@ public class Admin {
         loadPartTime(pathPT);
     }
 
+    /**
+     * The method loadFullTime() loads the csv file with information about the full-time employees.
+     * @param pathFT    the file path for the EmployeesFullTime.csv
+     */
     public void loadFullTime(String pathFT) {
         String line = "";
         boolean firstLine = true;
@@ -60,6 +67,11 @@ public class Admin {
             e.printStackTrace();
         }
     }
+
+    /**
+     * The method loadPartTime() loads the csv file with information about the part-time employees.
+     * @param pathPT    the file path for the EmployeesPartTime.csv
+     */
     public void loadPartTime(String pathPT) {
         String line = "";
         boolean firstLine = true;
@@ -91,7 +103,10 @@ public class Admin {
     }
 
 
-    // Method to add an employee
+    /**
+     * The method addEmployee() adds an employee to the arrayList of employees.
+     * @param employee      the employee being added to the arrayList
+     */
     public void addEmployee(Employee employee) {
         employees.add(employee);// Add employee to the list
         System.out.println("Employee " + employee.getName() + " added");
@@ -99,7 +114,10 @@ public class Admin {
         updateCSV();
     }
 
-    // Method to remove an employee by their employee ID
+    /**
+     * The method removeEmployee() removes an employee from the arrayList of employees given the employee ID.
+     * @param employeeID    the ID of the employee to be removed
+     */
     public void removeEmployee(String employeeID) {
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeID().equals(employeeID)) {
@@ -113,14 +131,26 @@ public class Admin {
         updateCSV();
     }
 
+    /**
+     * The method getEmployees() returns an arrayList of employees.
+     * @return employees    the arrayList of employees
+     */
     public static ArrayList<Employee> getEmployees() {
         return employees;
     }
 
+
+    /**
+     * The method setEmployees() sets the arrayList of employees.
+     * @param employees
+     */
     public static void setEmployees(ArrayList<Employee> employees) {
         Admin.employees = employees;
     }
 
+    /**
+     * The method updateCSV() updates the csv files with employee details.
+     */
     public void updateCSV() {
         String filePathFT = "EmployeesFullTime.csv";
         String filePathPT = "EmployeesPartTime.csv";
@@ -160,6 +190,5 @@ public class Admin {
         }
     }
 }
-
 
 
