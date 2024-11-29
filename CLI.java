@@ -284,6 +284,10 @@ public class CLI {
                 command = in.nextLine().toUpperCase();
                 if (command.equals("P")) {
                     System.out.println("Enter employee ID:");
+                    if(!employee.matches("\\d{4}")){
+                    System.out.println("Invalid employee ID. Please enter a valid employee ID.");
+                    continue;
+                    }
                     try {
                         String employeeID = in.nextLine();
 
@@ -387,6 +391,10 @@ public class CLI {
 
                         String employeeID = in.nextLine();
                         System.out.println("Please enter a 4 digit employee ID.");
+                    if(!employee.matches("\\d{4}")){
+                    System.out.println("Invalid employee ID. Please enter a valid employee ID.");
+                    continue;
+                    }
 
                         try {
                             //check to see if entered employee id is 4 digits
