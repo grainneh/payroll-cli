@@ -1,16 +1,17 @@
-/**
- * Class to handle user interaction with the code. Loosely based off the CLI
- * interface provided in the Appointment class from lab work.
- * 
- * @author Gráinne Hartigan, Liam Finn
- * @date 29//11/2024
- */
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
+/**
+ * CLI interface. Loosely based off the CLI interface provided in the Appointment class from one of our labs
+ *
+ * Seperate "command" methods for different inputs throughout
+ *
+ * @author Gráinne Hartigan, Liam Finn
+ * @date 29/11/2024
+ */
 public class CLI {
     Employee newEmployee;
     public int hours;
@@ -145,13 +146,22 @@ public class CLI {
                     2,
                     2)
     );
+    boolean running = false;
+
+    /**
+     * Constructor for CLI Object
+     */
     public CLI() {
         in = new Scanner(System.in);
         admin = new Admin();
         humanResources = new HumanResources(); //intialize HR
     }
+
+    /**
+     * Runs the CLI
+     */
     public void run() {
-        boolean running = true;
+        running = true;
         admin.loadCSV();//Michal added in once admin class was complete,this loads the csv file into an array so that it can be used.
 
         while (running) {
@@ -170,12 +180,22 @@ public class CLI {
                 case "H":
                     commandH();
                     break;
+
+
                 default:
                     System.out.println("Invalid option. Please enter E, A, H, or Q.");
             }
         }
 
     }
+
+    /**
+     * Handles the execution of the "Employee Commands" menu.
+     *
+     * This method checks if the user is logged in by calling {@link #logIn()}.
+     * If the login is successful, it displays a menu with options for employee actions
+     *
+     */
     private void commandE() {
         if (logIn()) {
             System.out.println("E)mployee Details V)iew Payslip S)ubmit payclaim");
@@ -186,12 +206,25 @@ public class CLI {
                 commandV();
             } else if (command.equals("S")) {
                 commandP();
+            } else if (command.equals("Q")) {
+                running = false;
             }
         }
     }
+
+    /**
+     * Handles the process of viewing a payslip for a specified date.
+     *
+     * Prompts the user to enter a date in the format "dd/MM/yyyy" and attempts to
+     * retrieve and display the corresponding payslip for the logged-in employee.
+     */
+
     private void commandV() {
         System.out.println("Please enter payslip date (dd/MM/yyyy):");
         String dateString = in.nextLine().trim();
+        if (dateString.equals("Q")) {
+            running = false;
+        }
         try {
             String[] dateParts = dateString.split("/");
             if (dateParts.length != 3) throw new IllegalArgumentException("Invalid date format.");
@@ -203,9 +236,7 @@ public class CLI {
             boolean payslipFound = false;
             for (Payslip slip : Employee.payslips) {
                 if (slip.getDate().equals(date)) {
-                    payslip.LoadPCSV();
                     System.out.println(payslip.generatePayslip(employee));
-                    //System.out.println(employee.payslip);
                     payslipFound = true;
                     break;
                 }
@@ -219,13 +250,21 @@ public class CLI {
             System.out.println("Invalid date format or invalid date. Please use dd/MM/yyyy.");
         }
     }
+    /**
+     * Handles the administration menu for managing employees.
+     *
+     * Allows an admin to log in, validate their password, and then either add or remove
+     * employees from the system, including updating the corresponding employee data.
+     */
     private void commandA() {
         if (logIn()) {
             System.out.println("Please enter password");
             String password = in.nextLine().trim();
-            if (password.equals(adminpassword)){
+            if (password.equals(adminpassword)) {
                 System.out.println("Password entered successfully.");
-            }else{
+            } else if (password == "Q") {
+                running = false;
+            } else{
                 System.out.println("Invalid password. Please try again.");
                 password = in.nextLine().trim();
             }
@@ -239,6 +278,9 @@ public class CLI {
                 System.out.println("Enter Employee ID");
                 try {
                     String employeeID = in.nextLine();
+                    if(employeeID == "Q"){
+                        running = false;
+                    }
 
                     //check to see if entered employee id is 4 digits
                     if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
@@ -250,13 +292,27 @@ public class CLI {
                     System.out.println("Please enter a 4 digit employee ID.");
                 }
                 admin.updateCSV();
+            } else if (command.equals("Q")) {
+                running = false;
             }
         }
     }
+
+    /**
+     * Authenticates an employee based on their Employee ID.
+     *
+     * Prompts the user to enter a 4-digit Employee ID, validates the input, and checks
+     * if the ID exists in the system. If the ID matches an employee, that employee is
+     * logged in and stored in the `employee` field. Returns true if login is successful.
+     * @return true if the login is successful, false otherwise.
+     */
     private boolean logIn() {
         System.out.println("Please enter employee ID to log in:");
         try {
             String employeeID = in.nextLine().trim();
+            if (employeeID.equals("Q")) {
+                running = false;
+            }
             try {
                 //check to see if entered employee id is 4 digits
                 if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
@@ -285,13 +341,25 @@ public class CLI {
         }
         return false;
     }
+
+    /**
+     * Handles the HR (Human Resources) menu for managing employee promotions and raises.
+     *
+     * Allows an HR user to log in, verify their password, and then access options of employee promotions and raises
+     *
+     * Includes input validation for employee IDs, positions, and pay rates, and handles various
+     * error conditions to ensure valid data entry.
+     */
     private void commandH() {
         if (logIn()) {
             System.out.println("Please enter password");
             String password = in.nextLine().trim();
             if (password.equals(hrpassword)) {
                 System.out.println("Password entered successfully.");
-            }else{
+            } else if (password.equals("Q")) {
+                running = false;
+
+            } else{
                 System.out.println("Invalid password. Please try again.");
                 password = in.nextLine().trim();
             }
@@ -300,6 +368,9 @@ public class CLI {
             while (!t) {
                 System.out.println("P)romote employee G)ive raise ");
                 command = in.nextLine().toUpperCase();
+                if(command.equals("Q")) {
+                    running = false;
+                }
                 if (command.equals("P")) {
                     System.out.println("Enter employee ID:");
                     try {
@@ -312,7 +383,9 @@ public class CLI {
                     }
                     try {
                         String employeeID = in.nextLine();
-
+                        if(employeeID == "Q"){
+                            running = false;
+                        }
                         //check to see if entered employee id is 4 digits
                         if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
                             System.out.println("Please enter a 4 digit employee ID.");
@@ -412,6 +485,9 @@ public class CLI {
                     System.out.println("Enter employee ID:");
 
                     String employeeID = in.nextLine();
+                    if(employeeID == "Q"){
+                        running = false;
+                    }
                     System.out.println("Please enter a 4 digit employee ID.");
                     try {
                         if (!employee.matches("\\d{4}")) {
@@ -450,7 +526,11 @@ public class CLI {
                     }else {
                         System.out.println("Enter new pay rate:");
                         try {
-                            double payRate = Double.parseDouble(in.nextLine().trim());
+                            String command = in.nextLine().toUpperCase();
+                            if(command.equals("Q")){
+                                running = false;
+                            }
+                            double payRate = Double.parseDouble(command.trim());
                             humanResources.employeeRaise(employeeID, payRate);
                             t = true;
                         } catch (NumberFormatException e) {
@@ -459,19 +539,31 @@ public class CLI {
                         // change employees pay rate
                     }
 
+                } if (command.equals("Q")){
+                    running = false;
                 }
             }
 
         }
 
     }
+
+    /**
+     * Handles the addition of a new employee to the system.
+     *
+     * Allows the user to choose whether the new employee is full-time or part-time. Prompts
+     * for necessary details such as Employee ID, name, position, and either salary scale
+     * point (for full-time) or hourly pay rate (for part-time). Validates inputs and updates
+     * the employee list upon successful entry.
+     */
     private void commandAa() {
         System.out.println("F)ull time or P)art time");
         command = in.nextLine().toUpperCase();
-        if (command.equals("F")) {
+         if (command.equals("F")) {
 
             String employeeID = EmptyInputHandling("Enter Employee ID");
-            boolean exists;
+            boolean validEmpId = false;
+            while(validEmpId == false) {
             try {
                 //check to see if entered employee id is 4 digits
                 if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
@@ -483,11 +575,12 @@ public class CLI {
                 System.out.println("Please enter a valid 4 digit employee ID.");
             }
 
-            for (int i = 0; i < admin.employees.size(); i++) {
-                if (admin.employees.get(i).getEmployeeID().equals(employee.getEmployeeID())) {
-                    System.out.println("Employee already exists. Please enter a valid employee ID.");
+                for (int i = 0; i < admin.employees.size(); i++) {
+                    if (admin.employees.get(i).getEmployeeID().equals(employee.getEmployeeID())) {
+                        System.out.println("Employee already exists. Please enter a valid employee ID.");
 
-                    break;
+                        break;
+                    }
                 }
             }
 
@@ -542,8 +635,11 @@ public class CLI {
             admin.addEmployee(newEmployee);
 
         }
-        if (command.equals("P")) {
+        else if (command.equals("P")) {
             String employeeID = EmptyInputHandling("Enter Employee ID");
+            if(employeeID == "Q"){
+                running = false;
+            }
             //check to see if entered employee id is 4 digits
             if(Integer.parseInt(employeeID) <1000 || Integer.parseInt(employeeID)>9999){
                 System.out.println("Please enter a 4 digit employee ID.");
@@ -557,6 +653,9 @@ public class CLI {
                 }
             }
             String name = EmptyInputHandling("Enter Employee Name");
+            if(name == "Q"){
+                running = false;
+            }
             String position = null;
             while (position == null) {
                 String attempt = EmptyInputHandling("Enter Employee Position"); //make sure valid position and get valid current points
@@ -571,6 +670,8 @@ public class CLI {
                     command = in.nextLine().toUpperCase();
                     if (command.equals("Y")) {
                         viewValidPartTimeEmployees();
+                    } else if (command.equals("Q")) {
+                        running = false;
                     } else {
                         // If input is anything else, go back to the start of the loop
                         System.out.println("Returning to input prompt.");
@@ -587,17 +688,39 @@ public class CLI {
             }
             newEmployee = new Employee(employeeID, name, position, payRate); //exchange with addPartTime when written
         }
+        else {
+            running = false;
+        }
     }
+
+    /**
+     * Prints out a list of all full time employees
+     */
     private void viewValidFullTimeEmployees() {
         for (String s : validFullTimeEmployees) {
             System.out.println(s);
         }
     }
+
+    /**
+     * Prints out a list of all part time employees
+     */
     private void viewValidPartTimeEmployees() {
         for (String s : validPartTimeEmployees) {
             System.out.println(s);
         }
     }
+
+    /**
+     * Handles user input to ensure it is not empty.
+     *
+     * Displays a given message prompt, reads user input, and checks if the input is empty.
+     * If the input is empty, the method displays an error message and prompts the user again
+     * until a non-empty input is provided.
+     *
+     * @param message the message to display as a prompt for the user
+     * @return the non-empty input entered by the user
+     */
     private String EmptyInputHandling(String message) {
         String input;
         do {
@@ -609,6 +732,15 @@ public class CLI {
         } while (input.isEmpty());
         return input;
     }
+
+    /**
+     * Handles the submission of a pay claim for part-time employees.
+     *
+     * Checks whether the logged-in employee is part-time or full-time. If part-time, prompts
+     * the user to enter the number of hours worked, validates the input, and submits the pay
+     * claim. Displays an appropriate message if the employee is full-time or if the input
+     * is invalid.
+     */
     public void commandP() {
         try {
             if (employee.getIsFullTime()) {
@@ -616,7 +748,8 @@ public class CLI {
             } else {
                 System.out.println("Submit pay claim.");
                 System.out.println("Please enter number of hours worked:");
-                hours = Integer.parseInt(in.nextLine().trim());
+                String command = in.next();
+                hours = Integer.parseInt(command.trim());
                 System.out.println(hours + " submitted.");
                 PayClaim.validateClaim(employee);
             }
@@ -625,4 +758,5 @@ public class CLI {
             System.out.println("Please enter the number of hours worked.");
         }
     }
+
 }
