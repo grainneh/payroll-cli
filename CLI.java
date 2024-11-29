@@ -220,6 +220,13 @@ public class CLI {
     }
     private void commandA() {
         if (logIn()) {
+            System.out.println("Please enter password");
+            String password = in.nextLine().trim();
+            if (password == adminpassword) {
+                System.out.println("Password entered successfully.");
+            }else{
+                System.out.println("Invalid password. Please try again.");
+            }
             //admin can add or remove an employee
             System.out.println("A)dd employee     R)emove employee");
             command = in.nextLine().toUpperCase();
@@ -278,6 +285,13 @@ public class CLI {
     }
     private void commandH() {
         if (logIn()) {
+            System.out.println("Please enter password");
+            String password = in.nextLine().trim();
+            if (password == hrpassword) {
+                System.out.println("Password entered successfully.");
+            }else{
+                System.out.println("Invalid password. Please try again.");
+            }
             //implement promotion functionality
             boolean t = false;
             while (!t) {
