@@ -1,8 +1,11 @@
+/**
+ * The class Run runs the CLI. This was based off of the AppointmentMenu class from lab work.
+ * 
+ * @author Gráinne Hartigan
+ */
+
 import java.io.IOException;
 
-/**
- * Runs the CLI
- */
 public class Run {
     public static void main(String[] args)
             throws IOException
