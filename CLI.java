@@ -1,19 +1,16 @@
-
+/**
+ * Class to handle user interaction with the code. Loosely based off the CLI
+ * interface provided in the Appointment class from lab work.
+ * *
+ * @author Gráinne Hartigan, Liam Finn
+ * @date 29//11/2024
+ */
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-/**
- * Class to handle user interaction with the code. Loosely based off the CLI
- * interface provided in the Appointment class from one of our labs
- * <p>
- * Main difference is that I wrote a separate method for the commands to
- * improve code readability as there are a lot of options here
- *
- * @author Gráinne Hartigan
- * @date 13/11/2024
- */
+
 public class CLI {
     Employee newEmployee;
     public int hours;
@@ -206,7 +203,9 @@ public class CLI {
             boolean payslipFound = false;
             for (Payslip slip : Employee.payslips) {
                 if (slip.getDate().equals(date)) {
+                    payslip.LoadPCSV();
                     System.out.println(payslip.generatePayslip(employee));
+                    //System.out.println(employee.payslip);
                     payslipFound = true;
                     break;
                 }
@@ -224,7 +223,7 @@ public class CLI {
         if (logIn()) {
             System.out.println("Please enter password");
             String password = in.nextLine().trim();
-            if (password.equals(adminpassword)) {
+            if (password.equals(adminpassword)){
                 System.out.println("Password entered successfully.");
             }else{
                 System.out.println("Invalid password. Please try again.");
