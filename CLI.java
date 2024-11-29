@@ -23,6 +23,8 @@ public class CLI {
     private Payslip payslip;
     private Admin admin;
     private HumanResources humanResources;
+    private static final String adminpassword = "admin123";
+    private static final String hrpassword = "hr123";
     private ArrayList<String> validPartTimeEmployees = new ArrayList<>(
             Arrays.asList("Library staff",
                     "Security",
