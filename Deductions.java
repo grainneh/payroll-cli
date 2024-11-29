@@ -1,59 +1,54 @@
+/**
+ * The class Deductions calculates the various deductions from an employees gross pay. These include health insurance,
+ * union contributions, PRSI, USC and income tax.
+ *
+ * @authors Gráinne Hartigan, Michał Czekalski
+ * @version 29/11/2024
+ * */
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*
-New class deduction to calculate pay deductions, allowing Payslip to simply generate a payslip without extraneous methods
-The class deductions determines the salary by checking if the employee is full/part time (using method from Employee)
-Calculates tax deductions, and uses set rates for union and health insurance fees
-Calculates net pay
-
-There is a problem with the salary and hours worked. Not sure how to get salary using getPosition(), getSalaryScale()
-and getCurrentPoint(). For part time employees, I think the getHoursWorked() should come from when they submit their
-pay claim in the CLI, and their hourlyRate needs to be defined somewhere. Possibly in the employee class.
-
-@author Gráinne Hartigan
-@version 9.11.24
- */
 public class Deductions {
-    private CLI cli;
-    double salary;
+    private CLI cli; //instance of CLI
+    double salary; //the employee's yearly salary (for full-time employees)
     double grossMonthlyPay; //all deductions are calculated based off of monthly pay
     Employee employee; //employee whose pay is to be calculated
     double netPay;
-    ArrayList<String> columnPositions = new ArrayList<> ();
-    ArrayList<Integer> columnPoints = new ArrayList<>();
-    ArrayList<Double> columnSalaries = new ArrayList<>();
+    ArrayList<String> columnPositions = new ArrayList<> (); // arrayList of positions
+    ArrayList<Integer> columnPoints = new ArrayList<>(); //arrayList of salary scale points
+    ArrayList<Double> columnSalaries = new ArrayList<>(); //arrayList of salaries
 
 
+    /**
+     * Constructor for the deductions which accepts an employee as a parameter. 
+     * 
+     * @param employee  the employee whose deductions are to be calculated
+     */
     public Deductions(Employee employee){
         this.employee = employee; //this is the employee referenced throughout the class
     }
 
     /**
-     * The method grossMonthlyPay() checks if an employee is full time or part time.
-     * Full time employees are salaried, part-time employees are paid an hourly rate
-     *
-     * @return grossMonthlyPay  the employee's gross monthly pay
+     * The method grossMonthlyPay() checks if an employee is full-time or part-time.
+     * Full time employees are salaried, part-time employees are paid an hourly rate.
      */
     public void calculateGrossMonthlyPay() {
         if (employee.getIsFullTime()) {
             grossMonthlyPay = getSalary() / 12; //assume salary is annual -> divide by 12 for monthly pay
-            //issue remains with determining the employees salary, needs to come from csv i think
         }else {
-            grossMonthlyPay = cli.hours * employee.getPayRate();
-            //employee submits their hours worked in the CLI
-            // getPayRate method needs to exist in the Employee class for part-time employees, should be in constructor
+            grossMonthlyPay = cli.hours * employee.getPayRate(); //employee submits their hours worked in the CLI            
         }
 
     }
     /**
      * The method grossMonthlyPay() returns the gross monthly pay calculated in calculateGrossMonthlyPay() to avoid
-     * having to call this method and calculate the gross monthly pay every time it is needed
+     * having to call this method and calculate the gross monthly pay every time it is needed.
      *
-     * @return  the gross monthly pay
+     * @return grossMonthlyPay   the gross monthly pay
      */
     public double grossMonthlyPay(){
         return grossMonthlyPay;
@@ -66,7 +61,7 @@ public class Deductions {
      *
      * Steps to calculate PRSI
      * - calculate 1/6 of earnings
-     * - subtract from €12 to get credit
+     * - subtract €12 to get credit
      * - calculate 4.1% of weekly earnings
      * - 4.1% - credit = weekly PRSI
      *
@@ -84,7 +79,7 @@ public class Deductions {
         } else if (weeklyEarnings <= 424) {
             double AfterCutOff = weeklyEarnings - 352.01;
             double sixthOfEarnings=AfterCutOff/6;
-            double taxCredit = Math.max(0,12 - sixthOfEarnings);//make sure we dont get negatives @Grainne
+            double taxCredit = Math.max(0,12 - sixthOfEarnings);//make sure we don't get negatives 
             PRSI = (weeklyEarnings * 0.041)- taxCredit;
         }
         else{
@@ -106,7 +101,7 @@ public class Deductions {
      * - next €44,284 @ 4%
      * - balance @ 8%
      *
-     * USC is calculated on a yearly basis, so the method returns USC/12;
+     * USC is calculated on a yearly basis, so the method returns USC/12
      *
      * @return USC      the employee's monthly USC contribution
      */
@@ -156,10 +151,12 @@ public class Deductions {
         return netPay = grossMonthlyPay() - PRSI() - USC() - incomeTax() - unionFees - healthInsuranceFees;
     }
 
-    public  void LoadCSV() {
+    /**
+     * The method LoadCSV() loads the csv "Salary.csv" which contains the information about positions, points on the
+     * UL salary scale and their associated salary figures.
+     */
+    public void LoadCSV() {
         String path =  "Salary.csv";
-
-
         String line = "";
         boolean firstLine =true;
         try {
@@ -180,7 +177,7 @@ public class Deductions {
 
                 }
             }
-            System.out.println("CSV Loaded");
+            System.out.println("CSV Loaded.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -188,6 +185,12 @@ public class Deductions {
         }
     }
 
+    /**
+     * The method getSalary() gets the salary associated with a specific position and point by iterating through the 
+     * position and points arrayLists.
+     * 
+     * @return salary   the employee's yearly salary
+     */
     public double getSalary() {
         String employeePosition = employee.getPosition();
         int employeeCurrentPoint = employee.getCurrentPoint();
