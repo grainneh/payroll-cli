@@ -1,32 +1,102 @@
+/**
+ * The Employee class creates an employee object with various attributes including employeeID, name, position, payRate,
+ * currentPoint and isFullTime.
+ * 
+ * @author Philip Roche
+ */
 
 import java.util.ArrayList;
 public class Employee {
     String employeeID;
     String name;
     String position;
-    double payRate = 15.00; //same for all part time employees
+    double payRate = 15.00; //same for all part-time employees
     int currentPoint;
-    boolean isFullTime; // Changed to instance variable
+    boolean isFullTime; 
     public static ArrayList<Payslip> payslips = new ArrayList<Payslip>();
     Boolean payClaimed = false; //set for individual employees
     Boolean ableToClaim = true; //set for individual employees
 
+    /**
+     * Null constructor
+     */
     public Employee(){}
-    // Constructor for full time
+    
+
+    /**
+     * Constructor for full-time employees
+     * 
+     * @param employeeID    employee ID
+     * @param name          employee name   
+     * @param position      employee position
+     * @param currentPoint  current point on salary scale
+     */
     public Employee(String employeeID, String name, String position, int currentPoint) {
         this.employeeID = employeeID;
         this.name = name;
         this.position = position;
         this.currentPoint = currentPoint;
         this.payRate = 0.00;
+        this.isFullTime = true;
     }
-    public Employee(String employeeID, String name, String position) {
+
+    /**
+     * Constructor for part-time employees
+     * 
+     * @param employeeID    employee ID
+     * @param name          employee name
+     * @param position      employee position
+     * @param payRate       hourly pay rate
+     */
+    public Employee(String employeeID, String name, String position, double payRate) {
         this.employeeID = employeeID;
         this.name = name;
         this.position = position;
         this.currentPoint = 0;
+        this.payRate = payRate;
         this.isFullTime = false;
     }
+    
+    /**
+     * The method printFullTime() returns a string displaying if an employee is full-time or part-time
+     * 
+     * @return string describing whether an employee is full-time or part-time
+     */
+    public String printFullTime(){
+        if(isFullTime){
+            return "Employee is full-time";
+        }else{
+            return "Employee is part-time";
+        }
+    }
+
+    /**
+     * The method addPayslip() adds a payslip to a list of employee payslips
+     * 
+     * @param payslip   the payslip to be added to the list
+     */
+    public void addPayslip(Payslip payslip) {
+        payslips.add(payslip);
+    }
+
+    /**
+     * The method matches() checks that the string entered matches an employee ID
+     * @param s     the string inputted by the employee
+     * @return      the employeeID
+     */
+    public boolean matches(String s) {
+        return employeeID.equals(s);
+    }
+
+    /**
+     * The toString method provides a string representation of the employee
+     * @return  string
+     */
+    @Override
+    public String toString() {
+        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position  + "\n" + "Current Point: " + currentPoint + "\n" + printFullTime();
+    }
+
     // Getter and Setter methods
     public String getEmployeeID() {
         return employeeID;
@@ -41,7 +111,7 @@ public class Employee {
         return currentPoint;
     }
     public boolean getIsFullTime() {
-        return isFullTime; // Return instance variable
+        return isFullTime;
     }
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
@@ -53,18 +123,12 @@ public class Employee {
         this.position = position;
     }
     public void setIsFullTime(boolean isFullTime) {
-        this.isFullTime = isFullTime; // Set instance variable
+        this.isFullTime = isFullTime;
     }
     public void setCurrentPoint(int currentPoint) {
         this.currentPoint = currentPoint;
     }
-    public String printFullTime(){
-        if(isFullTime){
-            return "Employee is full-time";
-        }else{
-            return "Employee is part-time";
-        }
-    }
+
     public double getPayRate(){
         return payRate;
     }
@@ -72,20 +136,7 @@ public class Employee {
         this.payRate = payRate;
     }
 
-
-
-    // Add payslip to an employee's payslip list
-    public void addPayslip(Payslip payslip) {
-        payslips.add(payslip);
-    }
-
-    @Override
-    public String toString() {
-        return "Employee ID: " + employeeID +"\n" + "Name: " + name + "\n" + "Position: " + position  + "\n" + "Current Point: " + currentPoint + "\n" + printFullTime();
-    }
-
-
-    public boolean matches(String s) {
-        return employeeID.equals(s);
+    public static ArrayList<Payslip> getPayslips() {
+        return payslips;
     }
 }
