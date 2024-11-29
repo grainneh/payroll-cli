@@ -1,7 +1,7 @@
 /**
  * Class to handle user interaction with the code. Loosely based off the CLI
  * interface provided in the Appointment class from lab work.
- * *
+ * 
  * @author Gráinne Hartigan, Liam Finn
  * @date 29//11/2024
  */
