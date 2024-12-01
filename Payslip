@@ -11,6 +11,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Payslip  {
+    private double GrossMonthlyPay;
+    private double usc;
+    private double prsi;
+    private double incomeTax;
+    private double unionContribution;
+    private double healthInsurance;
+    private double netPay;
+    private LocalDate date;
     Employee employee; //employee whose pay is to be calculated
     String name; //employee name
     String employeeID; //employee ID
@@ -24,6 +32,8 @@ public class Payslip  {
     Deductions deductions;
     ArrayList<String> employeeIDList = new ArrayList<String>();
     public ArrayList<Payslip> payslips = new ArrayList<>();
+    Payslip employeePayslip;
+    String position;
     /**
      * Constructor
      * @param employee
@@ -52,6 +62,19 @@ public class Payslip  {
      */
     public Payslip(String employeeID, String name, String position, double GrossMonthlyPay, double prsi,
                    double usc, double incomeTax, double healthInsurance, double unionContribution, double netPay,LocalDate date) {
+        this.employeeID = employeeID;
+        this.name = name;
+        todaysDate = LocalDate.now();
+        this.payDay = todaysDate.getDayOfMonth();
+        this.position = position;
+        this.GrossMonthlyPay = GrossMonthlyPay;
+        this.prsi = prsi;
+        this.usc = usc;
+        this.incomeTax = incomeTax;
+        this.healthInsurance = healthInsurance;
+        this.unionContribution = unionContribution;
+        this.netPay = netPay;
+        this.date = date;
     }
 
     /**
@@ -229,58 +252,39 @@ public class Payslip  {
             return;
         }
 
-        /*
-        // Find the payslip for the employee
-        boolean found = true;
-        for (Payslip ps : this.employee.getPayslips()) {
-            if (employeeID.equals(ps.getEmployeeID())) {
-                this.payslip = ps;
-                found = true;
-                break;
-            }else {
-                found = false;
-            }
-        }
 
-         */
 
         // Find the payslip for the employee
         for (Payslip ps : getPayslips()) {
-            if (employeeID.equals(ps.getEmployeeID())) {
-                this.payslip = ps;
+            if (this.employee.getEmployeeID().trim().equals(employeeID.trim())) {
+                System.out.println("Employee ID" + employeeID);
+                System.out.println(this.employee.getEmployeeID());
+                employeePayslip = ps;
+                System.out.println("employeePayslip.getEmployeeID" + employeePayslip.getEmployeeID());
                 break;
             }
         }
 
         // Handle payslip not found
-        if (this.payslip == null) {
+        if (employeePayslip == null ) {
             System.out.println("No payslip found for the given employee.");
-            return;
         }
 
-        /*
-        // Handle payslip not found
-        if (!found) {
-            System.out.println("No payslip found for the given employee.");
-            return;
-        }
-
-         */
 
         // Print header
-        System.out.printf("Payslip for %s (%s) dated %s\n", payslip.getName(), payslip.getEmployeeID(), payslip.getTodaysDate());
+        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getTodaysDate());
 
         // Print gross pay and deductions
-        System.out.printf("Gross pay: %.2f\n", payslip.getGrossPay());
+        System.out.printf("Gross pay: %.2f\n", employeePayslip.getGrossMonthlyPay());
         System.out.println("DEDUCTIONS:");
-        System.out.printf("PRSI: %.2f\n", payslip.getPrsi());
-        System.out.printf("USC: %.2f\n", payslip.getUsc());
-        System.out.printf("Income Tax: %.2f\n", payslip.getIncomeTax());
-        System.out.printf("Health Insurance: %.2f\n", payslip.getHealthInsurance());
-        System.out.printf("Union Contribution: %.2f\n", payslip.getUnionContribution());
+        System.out.printf("PRSI: %.2f\n", employeePayslip.getPrsi());
+        System.out.printf("USC: %.2f\n", employeePayslip.getUsc());
+        System.out.printf("Income Tax: %.2f\n", employeePayslip.getIncomeTax());
+        System.out.printf("Health Insurance: %.2f\n", employeePayslip.getHealthInsurance());
+        System.out.printf("Union Contribution: %.2f\n", employeePayslip.getUnionContribution());
 
         // Print net pay
-        System.out.printf("NET PAY: %.2f\n", payslip.getNetPay());
+        System.out.printf("NET PAY: %.2f\n", employeePayslip.getNetPay());
     }
 
 
@@ -383,5 +387,9 @@ public class Payslip  {
     public ArrayList<Payslip> getPayslips() {
         return payslips;
     }
+    private String getEmployeeID2() {
+        return employee.getEmployeeID();
+    }
+    
 
 }
