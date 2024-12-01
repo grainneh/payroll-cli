@@ -14,7 +14,7 @@ public class CLI {
     private String command;
     final private Scanner in;
     private Employee employee;
-    private Payslip payslip;
+    private Payslip payslip = new Payslip();
     private Admin admin;
     private HumanResources humanResources;
     private static final String adminpassword = "admin123";
@@ -159,6 +159,7 @@ public class CLI {
     public void run() {
         running = true;
         admin.loadCSV();
+        payslip.LoadPCSV();
 
         while (running) {
             System.out.println("E)mployee    A)dmin     H)uman Resources    Q)uit (Press Q at any point to quit)");
@@ -174,7 +175,7 @@ public class CLI {
                     commandH();
                     break;
                 case "Q":
-                    System.out.println("Goodbye!");
+                    System.out.println("Slán!");
                     running = false;
                     break;
                 default:
@@ -218,7 +219,7 @@ public class CLI {
      * retrieve and display the corresponding payslip for the logged-in employee.
      */
 
-    private void commandV() {
+    /*private void commandV() {
         System.out.println("Please enter payslip date (dd/MM/yyyy):");
         String dateString = in.nextLine().trim();
         if (dateString.equals("Q")) {
@@ -249,6 +250,24 @@ public class CLI {
             System.out.println("Invalid date format or invalid date. Please use dd/MM/yyyy.");
         }
     }
+
+
+     */
+
+    public void commandV(){
+        System.out.println("Please enter employee ID");
+        String employeeID = in.nextLine().trim();
+        /*
+        for (int i = 0; i < admin.employees.size(); i ++){
+            if(admin.employees.get(i).getEmployeeID().equals(employeeID)){
+                this.employee = admin.employees.get(i);
+            }
+        }
+
+         */
+        payslip.printPayslip(employeeID);
+    }
+
     /**
      * Handles the administration menu for managing employees.
      *
@@ -316,7 +335,7 @@ public class CLI {
                     return false;
                 } else {
 
-                    for (Employee emp : Admin.getEmployees()) {
+                    for (Employee emp : admin.getEmployees()) {
                         if (emp.getEmployeeID().equals(employeeID)) {
                             employee = emp;
                             System.out.println(emp.getName() + "(" + employeeID + ") logged in.");
@@ -376,7 +395,7 @@ public class CLI {
 
                         // Find the employee to promote
                         Employee employeeToPromote = null;
-                        for (Employee emp : Admin.getEmployees()) {
+                        for (Employee emp : admin.getEmployees()) {
                             if (emp.getEmployeeID().equals(employeeID)) {
                                 employeeToPromote = emp;
                                 break;
@@ -473,7 +492,7 @@ public class CLI {
 
                         // Find the employee to promote
                         Employee employeeToRaise = null;
-                        for (Employee emp : Admin.getEmployees()) {
+                        for (Employee emp : admin.getEmployees()) {
                             if (emp.getEmployeeID().equals(employeeID)) {
                                 employeeToRaise = emp;
                                 break;
@@ -711,7 +730,7 @@ public class CLI {
                     return false;
                 } else {
 
-                    for (Employee emp : Admin.getEmployees()) {
+                    for (Employee emp : admin.getEmployees()) {
                         if (emp.getEmployeeID().equals(employeeID)) {
                             employee = emp;
                             System.out.println(emp.getName() + "(" + employeeID + ") already exists. Please enter a new" +
@@ -751,7 +770,7 @@ public class CLI {
                     return false;
                 } else {
 
-                    for (Employee emp : Admin.getEmployees()) {
+                    for (Employee emp : admin.getEmployees()) {
                         if (emp.getEmployeeID().equals(employeeID)) {
                             employee = emp;
                             System.out.println(emp.getName() + "(" + employeeID + ") found.");
