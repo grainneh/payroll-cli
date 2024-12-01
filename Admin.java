@@ -8,8 +8,9 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.time.*;
+
 public class Admin {
-    public static ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
+    public ArrayList<Employee> employees = new ArrayList<Employee>();// Static employee list
     Payslip payslip; //instance of payslip class
     Employee employee; //instance of employee class
     String[] values; //string array used for reading csv values
@@ -56,8 +57,8 @@ public class Admin {
                     String name = values[1];
                     String position = values[2];
                     int currentPoint = Integer.parseInt(values[3]);
-                    employee = new Employee(employeeID, name, position, currentPoint);
-                    employees.add(employee);
+                    Employee employeeToAdd = new Employee(employeeID, name, position, currentPoint);
+                    employees.add(employeeToAdd);
                 }
             }
 
@@ -90,8 +91,8 @@ public class Admin {
                     String name = values[1];
                     String position = values[2];
                     double payRate = Double.parseDouble(values[3]);
-                    employee = new Employee(employeeID, name, position, payRate);
-                    employees.add(employee);
+                    Employee employeeToAdd = new Employee(employeeID, name, position, payRate);
+                    employees.add(employeeToAdd);
                 }
             }
 
@@ -135,7 +136,7 @@ public class Admin {
      * The method getEmployees() returns an arrayList of employees.
      * @return employees    the arrayList of employees
      */
-    public static ArrayList<Employee> getEmployees() {
+    public ArrayList<Employee> getEmployees() {
         return employees;
     }
 
@@ -144,8 +145,9 @@ public class Admin {
      * The method setEmployees() sets the arrayList of employees.
      * @param employees
      */
-    public static void setEmployees(ArrayList<Employee> employees) {
-        Admin.employees = employees;
+    public void setEmployees(ArrayList<Employee> employees) {
+        Admin admin = null;
+        admin.employees = employees;
     }
 
     /**
