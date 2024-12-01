@@ -215,7 +215,7 @@ public class Payslip  {
      * The method prints the payslip for a given employee
      * @param employeeID The payslip object to print
      */
-    public void printPayslip(String employeeID) {
+    public void printPayslip(String employeeID, LocalDate date) {
         this.employee = null; //reset
         admin.loadCSV();
         LoadPCSV();
@@ -245,41 +245,41 @@ public class Payslip  {
             System.out.println("Payslip list is empty.");
         }
 
-
-        if (getPayslips().isEmpty()) {
-            System.out.println("No payslips found for this employee.");
-            return;
-        }
-
+        boolean payslipExists = false;
         Payslip employeePayslip = null;
         // Find the payslip for the employee
         for (Payslip ps : getPayslips()) {
-            if (ps.getEmployeeID().equals(this.employee.getEmployeeID())) {
+            if (ps.getEmployeeID().equals(this.employee.getEmployeeID()) && ps.getDate().equals(date)) {
                 employeePayslip = ps;
+                payslipExists = true;
                 break;
             }
+            else {
+                employeePayslip = null;
+            }
         }
+        
+       if(payslipExists) {
+           // Print header
+           System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getDate());
 
-        // Handle payslip not found
-        if (employeePayslip == null ) {
-            System.out.println("No payslip found for the given employee.");
-        }
+           // Print gross pay and deductions
+           System.out.println("*************************");
+           System.out.printf("Gross pay: %.2f\n", employeePayslip.getGrossMonthlyPay());
+           System.out.println("*************************");
+           System.out.println("DEDUCTIONS:");
+           System.out.printf("PRSI: %.2f\n", employeePayslip.getPrsi());
+           System.out.printf("USC: %.2f\n", employeePayslip.getUsc());
+           System.out.printf("Income Tax: %.2f\n", employeePayslip.getIncomeTax());
+           System.out.printf("Health Insurance: %.2f\n", employeePayslip.getHealthInsurance());
+           System.out.printf("Union Contribution: %.2f\n", employeePayslip.getUnionContribution());
+           System.out.println("*************************");
 
-
-        // Print header
-        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getDate());
-
-        // Print gross pay and deductions
-        System.out.printf("Gross pay: %.2f\n", employeePayslip.getGrossMonthlyPay());
-        System.out.println("DEDUCTIONS:");
-        System.out.printf("PRSI: %.2f\n", employeePayslip.getPrsi());
-        System.out.printf("USC: %.2f\n", employeePayslip.getUsc());
-        System.out.printf("Income Tax: %.2f\n", employeePayslip.getIncomeTax());
-        System.out.printf("Health Insurance: %.2f\n", employeePayslip.getHealthInsurance());
-        System.out.printf("Union Contribution: %.2f\n", employeePayslip.getUnionContribution());
-
-        // Print net pay
-        System.out.printf("NET PAY: %.2f\n", employeePayslip.getNetPay());
+           // Print net pay
+           System.out.printf("NET PAY: %.2f\n", employeePayslip.getNetPay());
+       }else{
+           System.out.printf("No payslip found for %s dated %s\n", this.employee.getName(), date);
+       }
     }
 
 
