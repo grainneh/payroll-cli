@@ -257,10 +257,7 @@ public class Payslip  {
         // Find the payslip for the employee
         for (Payslip ps : getPayslips()) {
             if (this.employee.getEmployeeID().trim().equals(employeeID.trim())) {
-                System.out.println("Employee ID" + employeeID);
-                System.out.println(this.employee.getEmployeeID());
                 employeePayslip = ps;
-                System.out.println("employeePayslip.getEmployeeID" + employeePayslip.getEmployeeID());
                 break;
             }
         }
