@@ -148,10 +148,10 @@ public class Payslip  {
 
     /**
      * Getter method
-     * @return todaysDate
+     * @return payslip date
      */
     public LocalDate getDate () {
-        return todaysDate;
+        return date;
     }
 
     /**
@@ -269,7 +269,7 @@ public class Payslip  {
 
 
         // Print header
-        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getPayDay());
+        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getDate());
 
         // Print gross pay and deductions
         System.out.printf("Gross pay: %.2f\n", employeePayslip.getGrossMonthlyPay());
@@ -389,6 +389,7 @@ public class Payslip  {
     private double getGrossMonthlyPay(){
         return GrossMonthlyPay;
     }
+
 
 
 
