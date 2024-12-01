@@ -1,10 +1,13 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 /**
  * Command Line Interface
- * 
- * 
+ *
+ *
  * @author Gráinne Hartigan, Liam Finn
  */
 public class CLI {
@@ -151,7 +154,7 @@ public class CLI {
         admin = new Admin();
         humanResources = new HumanResources();
         payslip = new Payslip();
-    } 
+    }
 
     /**
      * Runs the CLI
@@ -183,7 +186,7 @@ public class CLI {
             }
         }
 
-    } 
+    }
 
     /**
      * Handles the execution of the "Employee Commands" menu.
@@ -193,16 +196,15 @@ public class CLI {
      */
     private void EmployeeMenu() {
         if (logIn()) {
-            command = EmptyInputHandling("E)mployee Details V)iew Payslip S)ubmit payclaim Q)uit");
+            command = EmptyInputHandling("E)mployee Details V)iew Payslip S)ubmit payclaim Q)uit").toUpperCase();
             switch (command) {
                 case "E":
                     System.out.println(employee.toString());
                     break;
-                /*case "V":
+                case "V":
                     commandV();
                     break;
 
-                 */
                 case "S":
                     PayClaimSubmission();
                     break;
@@ -214,7 +216,7 @@ public class CLI {
                     break;
             }
         }
-    } 
+    }
 
     /**
      * Handles the process of viewing a payslip for a specified date.
@@ -223,56 +225,27 @@ public class CLI {
      * retrieve and display the corresponding payslip for the logged-in employee.
      */
 
-    /*private void commandV() {
-        System.out.println("Please enter payslip date (dd/MM/yyyy):");
-        String dateString = in.nextLine().trim();
-        if (dateString.equals("Q")) {
-            running = false;
-        }
-        try {
-            String[] dateParts = dateString.split("/");
-            if (dateParts.length != 3) throw new IllegalArgumentException("Invalid date format.");
-            int day = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int year = Integer.parseInt(dateParts[2]);
-            LocalDate date = LocalDate.of(year, month, day);
-
-            boolean payslipFound = false;
-            for (Payslip slip : Employee.payslips) {
-                if (slip.getDate().equals(date)) {
-                    System.out.println(payslip.generatePayslip(employee));
-                    payslipFound = true;
-                    break;
-                }
-            }
-            if (!payslipFound) {
-                System.out.println("No payslip found for the given date.");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Date components must be numeric.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid date format or invalid date. Please use dd/MM/yyyy.");
-        }
-    }
-
-
-     */
-
-    /*public void commandV(){
+    public void commandV(){
         System.out.println("Please enter employee ID");
         String employeeID = in.nextLine().trim();
+
         /*
-        for (int i = 0; i < admin.employees.size(); i ++){
-            if(admin.employees.get(i).getEmployeeID().equals(employeeID)){
-                this.employee = admin.employees.get(i);
-            }
+        System.out.println("Please enter payslip date (dd/MM/yyyy):");
+        String dateString = in.nextLine().trim();
+        LocalDate date;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        try {
+            date = LocalDate.parse(dateString, formatter);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Please use dd/MM/yyyy.");
+            return;
         }
 
+         */
 
         payslip.printPayslip(employeeID);
     }
 
-     */
 
     /**
      * Handles the administration menu for managing employees.
@@ -298,7 +271,7 @@ public class CLI {
             }
 
             //admin can add or remove an employee
-            command = EmptyInputHandling("A)dd employee R)emove employee Q)uit");
+            command = EmptyInputHandling("A)dd employee R)emove employee Q)uit").toUpperCase();
             switch (command) {
                 case "A":
                     AddEmployees(); //add employee class
@@ -441,7 +414,7 @@ public class CLI {
 
         Employee employeeToPromote = findEmployeeById(employeeID);
         //promote employee functionality
-        command = EmptyInputHandling("I)ncrement current point N)ew Position Q)uit");
+        command = EmptyInputHandling("I)ncrement current point N)ew Position Q)uit").toUpperCase();
         if (command.equals("I")) {
             incrementSalaryPoint(employeeToPromote);
         } else if(command.equals("Q")) {
@@ -834,7 +807,7 @@ public class CLI {
      */
     public void quit(){
         System.out.println("Slán!");
-                running = false;
+        running = false;
     }
 
 }
