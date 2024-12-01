@@ -24,8 +24,8 @@ public class Deductions {
 
 
     /**
-     * Constructor for the deductions which accepts an employee as a parameter. 
-     * 
+     * Constructor for the deductions which accepts an employee as a parameter.
+     *
      * @param employee  the employee whose deductions are to be calculated
      */
     public Deductions(Employee employee){
@@ -40,7 +40,7 @@ public class Deductions {
         if (employee.getIsFullTime()) {
             grossMonthlyPay = getSalary() / 12; //assume salary is annual -> divide by 12 for monthly pay
         }else {
-            grossMonthlyPay = cli.hours * employee.getPayRate(); //employee submits their hours worked in the CLI            
+            grossMonthlyPay = cli.hours * employee.getPayRate(); //employee submits their hours worked in the CLI
         }
 
     }
@@ -79,7 +79,7 @@ public class Deductions {
         } else if (weeklyEarnings <= 424) {
             double AfterCutOff = weeklyEarnings - 352.01;
             double sixthOfEarnings=AfterCutOff/6;
-            double taxCredit = Math.max(0,12 - sixthOfEarnings);//make sure we don't get negatives 
+            double taxCredit = Math.max(0,12 - sixthOfEarnings);//make sure we don't get negatives
             PRSI = (weeklyEarnings * 0.041)- taxCredit;
         }
         else{
@@ -186,9 +186,9 @@ public class Deductions {
     }
 
     /**
-     * The method getSalary() gets the salary associated with a specific position and point by iterating through the 
+     * The method getSalary() gets the salary associated with a specific position and point by iterating through the
      * position and points arrayLists.
-     * 
+     *
      * @return salary   the employee's yearly salary
      */
     public double getSalary() {
