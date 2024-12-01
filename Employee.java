@@ -1,7 +1,7 @@
 /**
  * The Employee class creates an employee object with various attributes including employeeID, name, position, payRate,
  * currentPoint and isFullTime.
- * 
+ *
  * @author Philip Roche
  */
 
@@ -12,8 +12,8 @@ public class Employee {
     String position;
     double payRate = 15.00; //same for all part-time employees
     int currentPoint;
-    boolean isFullTime; 
-    public static ArrayList<Payslip> payslips = new ArrayList<Payslip>();
+    boolean isFullTime;
+    public ArrayList<Payslip> payslips = new ArrayList<Payslip>();
     Boolean payClaimed = false; //set for individual employees
     Boolean ableToClaim = true; //set for individual employees
 
@@ -21,13 +21,13 @@ public class Employee {
      * Null constructor
      */
     public Employee(){}
-    
+
 
     /**
      * Constructor for full-time employees
-     * 
+     *
      * @param employeeID    employee ID
-     * @param name          employee name   
+     * @param name          employee name
      * @param position      employee position
      * @param currentPoint  current point on salary scale
      */
@@ -42,7 +42,7 @@ public class Employee {
 
     /**
      * Constructor for part-time employees
-     * 
+     *
      * @param employeeID    employee ID
      * @param name          employee name
      * @param position      employee position
@@ -56,10 +56,10 @@ public class Employee {
         this.payRate = payRate;
         this.isFullTime = false;
     }
-    
+
     /**
      * The method printFullTime() returns a string displaying if an employee is full-time or part-time
-     * 
+     *
      * @return string describing whether an employee is full-time or part-time
      */
     public String printFullTime(){
@@ -72,7 +72,7 @@ public class Employee {
 
     /**
      * The method addPayslip() adds a payslip to a list of employee payslips
-     * 
+     *
      * @param payslip   the payslip to be added to the list
      */
     public void addPayslip(Payslip payslip) {
@@ -136,7 +136,7 @@ public class Employee {
         this.payRate = payRate;
     }
 
-    public static ArrayList<Payslip> getPayslips() {
+    public ArrayList<Payslip> getPayslips() {
         return payslips;
     }
 }
