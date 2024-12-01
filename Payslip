@@ -272,7 +272,7 @@ public class Payslip  {
 
 
         // Print header
-        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getTodaysDate());
+        System.out.printf("Payslip for %s (%s) dated %s\n", employeePayslip.getName(), employeePayslip.getEmployeeID(), employeePayslip.getPayDay());
 
         // Print gross pay and deductions
         System.out.printf("Gross pay: %.2f\n", employeePayslip.getGrossMonthlyPay());
@@ -341,19 +341,19 @@ public class Payslip  {
     }
 
     public double getPrsi(){
-        return payslip.getPrsi();
+        return prsi;
     }
 
     public double getUsc(){
-        return payslip.getUsc();
+        return usc;
     }
 
     public double getIncomeTax(){
-        return payslip.getIncomeTax();
+        return incomeTax;
     }
 
     public double getNetPay(){
-        return payslip.getNetPay();
+        return netPay;
     }
 
     public String getName() {
@@ -387,9 +387,12 @@ public class Payslip  {
     public ArrayList<Payslip> getPayslips() {
         return payslips;
     }
-    private String getEmployeeID2() {
-        return employee.getEmployeeID();
+
+
+    private double getGrossMonthlyPay(){
+        return GrossMonthlyPay;
     }
-    
+
+
 
 }
