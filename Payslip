@@ -251,11 +251,10 @@ public class Payslip  {
             return;
         }
 
-
-
+        Payslip employeePayslip = null;
         // Find the payslip for the employee
         for (Payslip ps : getPayslips()) {
-            if (this.employee.getEmployeeID().trim().equals(employeeID.trim())) {
+            if (ps.getEmployeeID().equals(this.employee.getEmployeeID())) {
                 employeePayslip = ps;
                 break;
             }
