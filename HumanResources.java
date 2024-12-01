@@ -16,7 +16,7 @@ public class HumanResources {
      */
     public void promoteEmployee(String employeeID, String newPosition) {
         // Loop through the employees to find the employee by their ID
-        ArrayList<Employee> employees = Admin.getEmployees();
+        ArrayList<Employee> employees = admin.getEmployees();
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeID().equals(employeeID)) {
                 employees.get(i).setPosition(newPosition); // Set the new position
@@ -31,15 +31,15 @@ public class HumanResources {
     }
 
     /**
-     * The method employeeRaise() implements functionality to give a part-time employee a pay raise, by changing their 
+     * The method employeeRaise() implements functionality to give a part-time employee a pay raise, by changing their
      * payRate
-     * 
+     *
      * @param employeeID    the ID of the employee to get a raise
      * @param payRate       the new payRate
      */
     public void employeeRaise(String employeeID, double payRate) {
         // Loop through the employees to find the employee by their ID
-        ArrayList<Employee> employees = Admin.getEmployees();
+        ArrayList<Employee> employees = admin.getEmployees();
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeID().equals(employeeID)) {
                 employees.get(i).setPayRate(payRate);// Set the new position
