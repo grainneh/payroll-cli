@@ -8,6 +8,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Payslip  {
     Employee employee; //employee whose pay is to be calculated
@@ -22,6 +23,7 @@ public class Payslip  {
     //Deductions deductions = new Deductions(employee); //calculate the deductions for the employee in question
     Deductions deductions;
     ArrayList<String> employeeIDList = new ArrayList<String>();
+    public ArrayList<Payslip> payslips = new ArrayList<>();
     /**
      * Constructor
      * @param employee
@@ -104,7 +106,8 @@ public class Payslip  {
 
                 );
                 System.out.println("CSV Updated");
-                employee.payslips.add(payslip);
+                System.out.println("Adding payslip for employee: " + employee.getEmployeeID());
+                payslips.add(payslip);
                 updatePCSV();
             } catch (FileNotFoundException e) {
                 System.out.println("Incorrect path name used");
@@ -140,6 +143,7 @@ public class Payslip  {
         try {
             BufferedReader PayslipReader = new BufferedReader(new FileReader(path));
 
+            Payslip ps = null;
             while ((line = PayslipReader.readLine()) != null) {
                 if (firstLine) {
                     firstLine = false;
@@ -160,18 +164,18 @@ public class Payslip  {
                     double healthInsurance = Double.parseDouble(values[7]);
                     double unionContribution = Double.parseDouble(values[8]);
                     double netPay = Double.parseDouble(values[9]);
-                    String dateString = values[10];
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    String[] dateParts = dateString.split("/");
-                    int day = Integer.parseInt(dateParts[0]);
-                    int month = Integer.parseInt(dateParts[1]);
-                    int year = Integer.parseInt(dateParts[2]);
-                    LocalDate date = LocalDate.of(year, month, day);
 
-                    Payslip ps = new Payslip(employeeID, name, position, grossMonthlyPay, prsi,
+                    String dateString = values[10];
+                        String[] dateParts = dateString.split("/");
+                        int day = Integer.parseInt(dateParts[0]);
+                        int month = Integer.parseInt(dateParts[1]);
+                        int year = Integer.parseInt(dateParts[2]);
+                        LocalDate date = LocalDate.of(year, month, day);
+
+                    ps = new Payslip(employeeID, name, position, grossMonthlyPay, prsi,
                             usc, incomeTax, healthInsurance, unionContribution, netPay, date);
 
-                    employee.payslips.add(ps); // Add to the list
+                    payslips.add(ps);
 
                 }
             }
@@ -188,12 +192,22 @@ public class Payslip  {
      * @param employeeID The payslip object to print
      */
     public void printPayslip(String employeeID) {
-        admin.loadCSV();
         this.employee = null; //reset
+        admin.loadCSV();
+        LoadPCSV();
+
+        //check if employees arrayList is null
+        if (admin.getEmployees().isEmpty()) {
+            System.out.println("Employees list is empty.");
+            return;
+        }
+
         //find employee using id number
-        for (Employee emp : admin.employees) {
-            if (emp.getEmployeeID().equals(employeeID)) {
+        for (Employee emp : admin.getEmployees()) {
+            System.out.println("Checking employee ID: " + emp.getEmployeeID());
+            if (emp.getEmployeeID().trim().equals(employeeID.trim())) {
                 this.employee = emp;
+                System.out.println("Employee with ID " + employeeID + " found.");
                 break;
             }
         }
@@ -203,21 +217,55 @@ public class Payslip  {
             System.out.println("Employee not found. Cannot print payslip.");
             return;
         }
+
+        //check if payslip arrayList is null
+        if(getPayslips().isEmpty()){
+            System.out.println("Payslip list is empty.");
+        }
+
+
+        if (getPayslips().isEmpty()) {
+            System.out.println("No payslips found for this employee.");
+            return;
+        }
+
+        /*
         // Find the payslip for the employee
-        boolean found = false;
-        for (Payslip ps : this.employee.payslips) {
+        boolean found = true;
+        for (Payslip ps : this.employee.getPayslips()) {
             if (employeeID.equals(ps.getEmployeeID())) {
                 this.payslip = ps;
                 found = true;
+                break;
+            }else {
+                found = false;
+            }
+        }
+
+         */
+
+        // Find the payslip for the employee
+        for (Payslip ps : getPayslips()) {
+            if (employeeID.equals(ps.getEmployeeID())) {
+                this.payslip = ps;
                 break;
             }
         }
 
         // Handle payslip not found
+        if (this.payslip == null) {
+            System.out.println("No payslip found for the given employee.");
+            return;
+        }
+
+        /*
+        // Handle payslip not found
         if (!found) {
             System.out.println("No payslip found for the given employee.");
             return;
         }
+
+         */
 
         // Print header
         System.out.printf("Payslip for %s (%s) dated %s\n", payslip.getName(), payslip.getEmployeeID(), payslip.getTodaysDate());
@@ -234,6 +282,7 @@ public class Payslip  {
         // Print net pay
         System.out.printf("NET PAY: %.2f\n", payslip.getNetPay());
     }
+
 
     /**
      * The method updatePCSV() writes to the csv file of employee payslips
@@ -252,7 +301,7 @@ public class Payslip  {
 
             // Iterate through the list of employees and write each employee's data
             for (Employee employee : admin.employees){
-                for (Payslip payslip: employee.payslips){
+                for (Payslip payslip: payslips){
                     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     Payslipwriter.write(
                             employee.getEmployeeID() + "," +
@@ -330,4 +379,9 @@ public class Payslip  {
     public Payslip getPayslip() {
         return payslip;
     }
+
+    public ArrayList<Payslip> getPayslips() {
+        return payslips;
+    }
+
 }
