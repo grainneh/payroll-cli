@@ -1,3 +1,4 @@
+
 /**
  * The Payslip class generates a payslip for an employee and writes it to a csv file
  *
@@ -189,11 +190,11 @@ public class Payslip  {
                     double netPay = Double.parseDouble(values[9]);
 
                     String dateString = values[10];
-                        String[] dateParts = dateString.split("/");
-                        int day = Integer.parseInt(dateParts[0]);
-                        int month = Integer.parseInt(dateParts[1]);
-                        int year = Integer.parseInt(dateParts[2]);
-                        LocalDate date = LocalDate.of(year, month, day);
+                    String[] dateParts = dateString.split("/");
+                    int day = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int year = Integer.parseInt(dateParts[2]);
+                    LocalDate date = LocalDate.of(year, month, day);
 
                     ps = new Payslip(employeeID, name, position, grossMonthlyPay, prsi,
                             usc, incomeTax, healthInsurance, unionContribution, netPay, date);
@@ -227,10 +228,8 @@ public class Payslip  {
 
         //find employee using id number
         for (Employee emp : admin.getEmployees()) {
-            System.out.println("Checking employee ID: " + emp.getEmployeeID());
             if (emp.getEmployeeID().trim().equals(employeeID.trim())) {
                 this.employee = emp;
-                System.out.println("Employee with ID " + employeeID + " found.");
                 break;
             }
         }
