@@ -12,6 +12,7 @@ import java.util.Scanner;
  */
 public class CLI {
     Employee newEmployee;
+    private String employeeID;
     public int hours;
     private String command;
     private Scanner in;
@@ -226,24 +227,25 @@ public class CLI {
      */
 
     public void commandV(){
-        System.out.println("Please enter employee ID");
-        String employeeID = in.nextLine().trim();
-
-        /*
         System.out.println("Please enter payslip date (dd/MM/yyyy):");
-        String dateString = in.nextLine().trim();
-        LocalDate date;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-        try {
-            date = LocalDate.parse(dateString, formatter);
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Please use dd/MM/yyyy.");
-            return;
+        LocalDate date = null;
+        while(date==null) {
+            String dateString = in.nextLine().trim();
+
+            //quit if q is entered
+            if (dateString.toUpperCase().equals("Q")) {
+                quit();
+                return;
+            }
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+            try {
+                date = LocalDate.parse(dateString, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use dd/MM/yyyy.");
+            }
         }
-
-         */
-
-        payslip.printPayslip(employeeID);
+        payslip.printPayslip(employeeID, date);
     }
 
 
@@ -281,7 +283,7 @@ public class CLI {
                     String employeeID = null;
                     while (employeeID == null) {
                         employeeID = EmptyInputHandling("Enter employee id");
-                        if (inputEmployeeID(employeeID)) {
+                        if (inputEmployeeID(employeeID,false)) {
                             admin.removeEmployee(employeeID);
                             admin.updateCSV();
                             break;
@@ -313,37 +315,40 @@ public class CLI {
      * @return true if the login is successful, false otherwise.
      */
     private boolean logIn() {
-        String employeeID = EmptyInputHandling("Please enter your 4-digit Employee ID to log in (or Q to quit):");
-
+        employeeID = EmptyInputHandling("Please enter your 4-digit Employee ID to log in (or Q to quit):");
 
         if (employeeID.equals("Q")) {
             quit();
             return false;
         }
-        try {
-            int id = Integer.parseInt(employeeID);
-            if (id < 1000 || id > 9999) {
-                System.out.println("Invalid ID. Please enter a 4-digit Employee ID.");
-                return false;
-            }
-
-            for (Employee emp : admin.getEmployees()) {
-                if (emp.getEmployeeID().equals(employeeID)) {
-                    employee = emp;
-                    System.out.println(emp.getName() + " (" + employeeID + ") logged in successfully.");
-                    return true; // Successful login
+        while (true) {
+            try {
+                int id = Integer.parseInt(employeeID);
+                if (id < 1000 || id > 9999) {
+                    System.out.println("Invalid ID. Please enter a 4-digit Employee ID.");
+                    employeeID = in.nextLine().trim();
+                    continue;
                 }
+
+                for (Employee emp : admin.getEmployees()) {
+                    if (emp.getEmployeeID().equals(employeeID)) {
+                        employee = emp;
+                        System.out.println(emp.getName() + " (" + employeeID + ") logged in successfully.");
+                        return true; // Successful login
+                    }
+                }
+
+                // No employee found with the entered ID
+                System.out.println("User not found. Please check your Employee ID and try again.");
+                employeeID = in.nextLine().trim();
+                continue;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid 4-digit number.");
+                employeeID = in.nextLine().trim();
             }
-
-            // No employee found with the entered ID
-            System.out.println("User not found. Please check your Employee ID.");
-            return false;
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid 4-digit number.");
-            return false;
         }
-    } //checked
+    }
 
 
     /**
@@ -402,28 +407,32 @@ public class CLI {
      * Handle an employee promotion
      */
     private void handlePromotion() {
-        String employeeID = EmptyInputHandling("Please enter employee ID");
-        if(employeeID.equals("Q")) {
+        String employeeIDPromote = EmptyInputHandling("Please enter employee ID of employee to promote:");
+
+        if(employeeIDPromote.equals("Q")) {
             quit();
             return;
         }
-        if(!inputEmployeeID(employeeID)) {
+        if(!inputEmployeeID(employeeIDPromote,false)) {
             System.out.println("Invalid employee ID. Please try again.");
             return;
         }
 
-        Employee employeeToPromote = findEmployeeById(employeeID);
+        Employee employeeToPromote = findEmployeeById(employeeIDPromote);
+        if (employeeToPromote == null) {
+            System.out.println("Employee not found. Cannot proceed with promotion.");
+            return;
+        }
         //promote employee functionality
         command = EmptyInputHandling("I)ncrement current point N)ew Position Q)uit").toUpperCase();
         if (command.equals("I")) {
             incrementSalaryPoint(employeeToPromote);
         } else if(command.equals("Q")) {
             quit();
-            return;
         } else if(command.equals("N")) {
             String newPosition = validatePosition(employeeToPromote.getIsFullTime());
             if (newPosition != null) {
-                humanResources.promoteEmployee(employeeID, newPosition);
+                humanResources.promoteEmployee(employeeIDPromote, newPosition);
                 System.out.println("Employee promoted to position: " + newPosition);
             }
         } else {
@@ -441,7 +450,7 @@ public class CLI {
             return;
         }
 
-        if (!inputEmployeeID(employeeID)) {
+        if (!inputEmployeeID(employeeID,false)) {
             System.out.println("Invalid employee ID. Please try again.");
             return;
         }
@@ -475,8 +484,11 @@ public class CLI {
      * @return
      */
     private Employee findEmployeeById(String employeeID) {
+        admin.loadCSV();
+
         for (Employee emp : admin.getEmployees()) {
-            if (emp.getEmployeeID().equals(employeeID)) {
+            if (emp.getEmployeeID().trim().equals(employeeID.trim())) {
+                System.out.println(emp.getName() + " (" + emp.getEmployeeID() + ") found.");
                 return emp;
             }
         }
@@ -538,10 +550,15 @@ public class CLI {
     private void AddEmployees() {
         System.out.println("F)ull time or P)art time");
         command = in.nextLine().toUpperCase();
+
+        if(command.equals("Q")){
+            quit();
+        }
+
         if (command.equals("F")) {
             System.out.println("Enter employee ID:");
             String employeeID = in.nextLine().trim();
-            if (inputEmployeeIDAddEmployee(employeeID)) {
+            if (inputEmployeeID(employeeID,true)) {
                 String name = EmptyInputHandling("Enter Employee Name");
                 String position = null;
                 while (position == null) {
@@ -596,7 +613,7 @@ public class CLI {
         } else if (command.equals("P")) {
             System.out.println("Enter employee ID:");
             String employeeID = in.nextLine().trim();
-            if (inputEmployeeID(employeeID)) {
+            if (inputEmployeeID(employeeID,false)) {
                 if (employeeID == "Q") {
                     running = false;
                 }
@@ -704,7 +721,9 @@ public class CLI {
                 System.out.println("Submit pay claim.");
                 System.out.println("Please enter number of hours worked:");
                 String command = in.next();
-
+                if(command.toUpperCase().equals("Q")){
+                    quit();
+                }
                 // Attempt to parse the number of hours
                 try {
                     hours = Integer.parseInt(command.trim());
@@ -724,82 +743,66 @@ public class CLI {
         }
     }
 
-
     /**
-     * The method inputEmployeeIDAddEmployee() handles instances when the user inputs an employee ID. This method handles
-     * the speecific case when users are attempting to add a new employee
+     * The method inputEmployeeID() checks when the user inputs an employee ID to ensure that it is not null and only
+     * 4 digits long. It prints different statements depending on whether the employee is attempting to add a new
+     * employee or not.
+     *
      * @param employeeID    the user input
-     * @return boolean
+     * @param addEmployee      checks whether the employee is attempting to add an employee
+     * @return
      */
-    private boolean inputEmployeeIDAddEmployee(String employeeID){
-        try {
+    private boolean inputEmployeeID(String employeeID, boolean addEmployee) {
+        while(true) {
+            if (employeeID.toUpperCase().equals("Q")) {
+                quit();
+                return false;
+            }
+
+            //check to see if input is empty
+            if (employeeID.isEmpty()) {
+                System.out.println("Employee ID cannot be empty.");
+                System.out.println("Please enter a 4-digit Employee ID");
+                employeeID = in.nextLine().trim();
+                continue;
+            }
+
             try {
                 //check to see if entered employee id is 4 digits
                 if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
                     System.out.println("Invalid ID.");
-                } else if (employeeID.isEmpty()) {
-                    System.out.println("Employee ID cannot be empty.");
+                    System.out.println("Please enter a 4-digit Employee ID");
+                    employeeID = in.nextLine().trim();
+                    continue;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a 4 digit employee ID.");
+                employeeID = in.nextLine().trim();
+                continue;
+            }
+
+            //check to see if the employee already exists
+            for (Employee emp : admin.getEmployees()) {
+                if (emp.getEmployeeID().equals(employeeID)) {
+                    employee = emp;
+                }
+                if (addEmployee) {
+                    System.out.println(emp.getName() + "(" + emp.getEmployeeID() + ") already exists");
                     return false;
                 } else {
-
-                    for (Employee emp : admin.getEmployees()) {
-                        if (emp.getEmployeeID().equals(employeeID)) {
-                            employee = emp;
-                            System.out.println(emp.getName() + "(" + employeeID + ") already exists. Please enter a new" +
-                                    "Employee ID.");
-                            employeeID = in.nextLine().trim();
-                            return true;
-                        }
-                    }
-                    System.out.println("Valid ID.");
                     return true;
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a 4 digit employee ID.");
+            }
+            if (addEmployee) {
+                System.out.println("Valid ID.");
+                return true;
             }
 
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid number.");
+            // If not found and not adding, return user not found
+            System.out.println("User not found. Please check your Employee ID.");
+            System.out.println("Please enter a 4-digit Employee ID");
+            employeeID = in.nextLine().trim();
         }
-        return false;
-    }
-
-    /**
-     * The method inputEmployeeID() handles cases where the user inputs an employee ID to the code and implements checks
-     * to ensure the user enters a valid ID
-     * @param employeeID    user input
-     * @return boolean
-     */
-    private boolean inputEmployeeID(String employeeID){
-        try {
-            try {
-                //check to see if entered employee id is 4 digits
-                if (Integer.parseInt(employeeID) < 1000 || Integer.parseInt(employeeID) > 9999) {
-                    System.out.println("Invalid ID.");
-                } else if (employeeID.isEmpty()) {
-                    System.out.println("Employee ID cannot be empty.");
-                    return false;
-                } else {
-
-                    for (Employee emp : admin.getEmployees()) {
-                        if (emp.getEmployeeID().equals(employeeID)) {
-                            employee = emp;
-                            System.out.println(emp.getName() + "(" + employeeID + ") found.");
-                            return true;
-                        }
-                    }
-                    System.out.println("User not found. Please check your Employee ID.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a 4 digit employee ID.");
-            }
-
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid number.");
-        }
-        return false;
     }
 
     /**
@@ -808,6 +811,7 @@ public class CLI {
     public void quit(){
         System.out.println("Slán!");
         running = false;
+        System.exit(0);
     }
 
 }
