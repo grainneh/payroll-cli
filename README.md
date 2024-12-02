@@ -30,3 +30,7 @@ Each full-time position has an associated salary scale which determines the empl
 
 Full-time employees are promoted to the next point on their salary scale each October. This is taken into account by the payroll system and occurs automatically each October. However, HR staff also have the ability to promote an employee to the next point on their salary scale at any given time.
 
+# Credits
+Michał Czekalski, Gráinne Hartigan, Liam Finn, Philip Roche
+
+Note, GenAI was ued to assist in writing a csv reader/writer method which was later updated and improved upon by the above authors.
