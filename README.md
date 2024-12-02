@@ -3,9 +3,9 @@
 This project is a payroll system for University Of Limerick (UL) staff. This payroll system can handle tasks such as payslip generation and employee management. The payroll system has three user types - Employee, Admin and Human Resources (HR), all with different functionality.
 
 # User Interaction with the Payroll System
-Interaction between the users and the payroll system is facilitated via a command line interface (CLI). The user inputs basic, single character commands in the initial interaction with the interface. For example, the user is initially prompted to log in as either an Employee, Admin staff, or HR Staff.
+Interaction between the users and the payroll system is facilitated via a command line interface (CLI). The user inputs basic, single character commands in the initial interaction with the interface. For example, the user is initially prompted to log in as either an Employee, Admin staff, or HR Staff (use ID number 1111 to log in).
 
-The user then inputs either E, A, H, or Q to interact with the payroll system. Errors in input are handled gracefully and the user is prompted to try again.
+The user then inputs either E, A, H, or Q to interact with the payroll system. Errors in input are handled gracefully and the user is prompted to try again. When attempting to log in as Admin or HR staff the user wll be prompted to enter a password. Use password "admin123" for Admin staff and password "hr123" for HR staff.
 
 Once the user has logged in as an Employee, Admin staff or HR staff, they may enter strings or numbers to the command line interface. The payroll system handles errors in user input by providing instructions on the expected formatting and prompting command re-entry.
 
@@ -23,7 +23,7 @@ Human Resources staff are prompted to log in with their employee ID and enter a 
 # Payslips
 The UL payroll system generates a payslip for each employee on the 25th of the month. These payslips are stored in a CSV file named “Payslips.csv”. Part-time employees must submit a payclaim before the second Friday of each month to get paid. The payroll system implements checks to ensure this is done so.
 
-Employees can log onto the UL payroll system and view their payslips. 
+Employees can log onto the UL payroll system and view their payslips. To view a sample payslip, enter employee ID 1111, and when prompted to enter a payslip date enter 25/11/2024.
 
 # Salary Scales
 Each full-time position has an associated salary scale which determines the employee’s yearly salary. This data is stored in a CSV file named “Salary.csv” and the payroll system accesses these values when calculating an employee’s pay and generating their payslip each month.
