@@ -51,6 +51,7 @@ public class Deductions {
      * @return grossMonthlyPay   the gross monthly pay
      */
     public double grossMonthlyPay(){
+        calculateGrossMonthlyPay();
         return grossMonthlyPay;
     }
 
