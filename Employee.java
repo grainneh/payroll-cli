@@ -5,7 +5,6 @@
  * @author Philip Roche
  */
 
-import java.util.ArrayList;
 public class Employee {
     String employeeID;
     String name;
@@ -13,7 +12,6 @@ public class Employee {
     double payRate = 15.00; //same for all part-time employees
     int currentPoint;
     boolean isFullTime;
-    public ArrayList<Payslip> payslips = new ArrayList<Payslip>();
     Boolean payClaimed = false; //set for individual employees
     Boolean ableToClaim = true; //set for individual employees
 
@@ -76,18 +74,9 @@ public class Employee {
      * @param payslip   the payslip to be added to the list
      */
     public void addPayslip(Payslip payslip) {
-        payslips.add(payslip);
+        payslip.payslips.add(payslip);
     }
-
-    /**
-     * The method matches() checks that the string entered matches an employee ID
-     * @param s     the string inputted by the employee
-     * @return      the employeeID
-     */
-    public boolean matches(String s) {
-        return employeeID.equals(s);
-    }
-
+    
     /**
      * The toString method provides a string representation of the employee
      * @return  string
@@ -113,18 +102,13 @@ public class Employee {
     public boolean getIsFullTime() {
         return isFullTime;
     }
-    public void setEmployeeID(String employeeID) {
-        this.employeeID = employeeID;
-    }
     public void setName(String name) {
         this.name = name;
     }
     public void setPosition(String position) {
         this.position = position;
     }
-    public void setIsFullTime(boolean isFullTime) {
-        this.isFullTime = isFullTime;
-    }
+   
     public void setCurrentPoint(int currentPoint) {
         this.currentPoint = currentPoint;
     }
@@ -134,9 +118,5 @@ public class Employee {
     }
     public void setPayRate(double payRate){
         this.payRate = payRate;
-    }
-
-    public ArrayList<Payslip> getPayslips() {
-        return payslips;
     }
 }
