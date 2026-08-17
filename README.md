@@ -1,36 +1,60 @@
-# CS4013 Software Development Project
+# UL Payroll System
 
-This project is a payroll system for University Of Limerick (UL) staff. This payroll system can handle tasks such as payslip generation and employee management. The payroll system has three user types - Employee, Admin and Human Resources (HR), all with different functionality.
+A command-line payroll system built for CS4013 (Object-Oriented Design) at the University of Limerick. It manages payslip generation, employee records, and pay claims for three user types: Employee, Admin, and HR.
 
-# User Interaction with the Payroll System
-Interaction between the users and the payroll system is facilitated via a command line interface (CLI). The user inputs basic, single character commands in the initial interaction with the interface. For example, the user is initially prompted to log in as either an Employee, Admin staff, or HR Staff (use ID number 1111 to log in).
+**Group project — 4 contributors.** See [Contributions](#contributions) below for individual ownership.
 
-The user then inputs either E, A, H, or Q to interact with the payroll system. Errors in input are handled gracefully and the user is prompted to try again. When attempting to log in as Admin or HR staff the user wll be prompted to enter a password. Use password "admin123" for Admin staff and password "hr123" for HR staff.
+## Features
 
-Once the user has logged in as an Employee, Admin staff or HR staff, they may enter strings or numbers to the command line interface. The payroll system handles errors in user input by providing instructions on the expected formatting and prompting command re-entry.
+- **Employee** — log in, view personal details, view a payslip by date, submit a pay claim (part-time staff)
+- **Admin** — log in with a password, add/remove employees from the full-time and part-time CSV records
+- **HR** — log in with a password, promote employees or apply a pay raise
+- **Payroll engine** — calculates gross pay (salaried vs. hourly), then net pay after PRSI, USC, income tax, health insurance, and union deductions; applies automatic annual salary scale progression each October
 
-# User Types
-# Employee
-Employees are prompted to login with their employee ID and can either view their employee details, view their payslip for a specific date or submit a pay claim.
+## Project structure
 
-# Admin
-Admin staff are prompted to log in with their employee ID and enter a password that allows them admin privileges. Admin staff can add or remove employees from the payroll system. Information about these employees are stored in two CSV files “EmployeesFullTime.csv” and “EmployeesPartTime.csv” for full-time and part-time employees respectively.
+```
+src/        Java source files
+resources/  Sample CSV data the CLI reads/writes (employee records, salary scales, payslips)
+docs/       UML class diagram and CRC cards from the design phase
+```
 
-# Human Resources 
-Human Resources staff are prompted to log in with their employee ID and enter a password that allows them HR privileges. HR staff can promote employees, or give them a pay raise.
+## Running it
 
-# Payroll System
-# Payslips
-The UL payroll system generates a payslip for each employee on the 25th of the month. These payslips are stored in a CSV file named “Payslips.csv”. Part-time employees must submit a payclaim before the second Friday of each month to get paid. The payroll system implements checks to ensure this is done so.
+The file paths in the code are relative to the working directory, so compile into a folder alongside the resource CSVs:
 
-Employees can log onto the UL payroll system and view their payslips. To view a sample payslip, enter employee ID 1111, and when prompted to enter a payslip date enter 25/11/2024.
+```bash
+mkdir build
+javac -d build src/*.java
+cp resources/*.csv build/
+cd build
+java Run
+```
 
-# Salary Scales
-Each full-time position has an associated salary scale which determines the employee’s yearly salary. This data is stored in a CSV file named “Salary.csv” and the payroll system accesses these values when calculating an employee’s pay and generating their payslip each month.
+You'll be prompted to log in as Employee (`E`), Admin (`A`), or HR (`H`).
 
-Full-time employees are promoted to the next point on their salary scale each October. This is taken into account by the payroll system and occurs automatically each October. However, HR staff also have the ability to promote an employee to the next point on their salary scale at any given time.
+| Role | ID | Password |
+|------|-----|----------|
+| Employee | `1111` | — |
+| Admin | `1111` | `admin123` |
+| HR | `1111` | `hr123` |
 
-# Credits
+To view a sample payslip, log in as Employee with ID `1111` and enter date `25/11/2024`.
+
+## Contributions
+
+| Area | Author(s) |
+|------|-----------|
+| CLI / user interaction layer | Gráinne Hartigan, Liam Finn |
+| Deductions (PRSI, USC, income tax, health insurance, union) | Gráinne Hartigan |
+| Payslip generation, salary scale progression | Gráinne Hartigan |
+| Admin functions | Michał Czekalski, Gráinne Hartigan |
+| Employee record management | Philip Roche |
+| HR functions | Michał Czekalski |
+| Pay claim submission | Liam Finn |
+
+GenAI was used to assist an early draft of a CSV reader/writer helper method, which was subsequently rewritten and extended by the authors.
+
+## Authors
+
 Michał Czekalski, Gráinne Hartigan, Liam Finn, Philip Roche
-
-Note, GenAI was ued to assist in writing a csv reader/writer method which was later updated and improved upon by the above authors.
